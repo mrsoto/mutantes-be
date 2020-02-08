@@ -4,7 +4,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class DnaEvaluatorImpl implements DnaEvaluator {
@@ -20,7 +22,26 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
      */
     @Override
     public boolean isHuman(@NonNull Collection<String> dna) {
+        if (isRowMutant(dna)) return false;
+        return !isColumnMutant(dna);
+    }
+
+    public boolean isColumnMutant(@NonNull Collection<String> dna) {
+        if (dna.size() < 4) return false;
+
+        int rowLength = dna.stream().findFirst().map(String::length).orElseThrow();
+        return IntStream.range(0, rowLength).anyMatch(column -> {
+            var collector = new HashMap<Character, Integer>();
+            dna
+                    .stream()
+                    .map(seq -> seq.charAt(column))
+                    .forEach(chr -> collector.merge(chr, 1, Integer::sum));
+            return collector.values().stream().anyMatch(count -> count >= 4);
+        });
+    }
+
+    public boolean isRowMutant(@NonNull Collection<String> dna) {
         var mutantSequence = List.of("AAAA", "CCCC", "TTTT", "GGGG");
-        return dna.stream().noneMatch(seq -> mutantSequence.stream().anyMatch(seq::contains));
+        return dna.stream().anyMatch(seq -> mutantSequence.stream().anyMatch(seq::contains));
     }
 }
