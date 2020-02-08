@@ -3,10 +3,8 @@ package me.mrs.mutantes.servicios;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -21,6 +19,12 @@ public class MutantController {
     @PostMapping(value = "/mutant")
     @ResponseBody
     public ResponseEntity<Void> isMutant(@Valid @RequestBody final DnaViewModel payload) {
-        return new ResponseEntity<>(evaluatorService.isHuman(payload.getDna()) ? HttpStatus.OK : HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(evaluatorService.isHuman(payload.getDna()) ? HttpStatus.OK :
+                HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping(value = "/")
+    public RedirectView redirectWithUsingRedirectView() {
+        return new RedirectView("/docs/index.html");
     }
 }
