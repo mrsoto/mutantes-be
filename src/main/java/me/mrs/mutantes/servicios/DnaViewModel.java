@@ -9,6 +9,7 @@ import java.util.Collections;
 @Validated
 public class DnaViewModel {
     @NonNull
+    @DnaConstraint
     private Collection<String> dna;
 
     public DnaViewModel(@NonNull Collection<String> dna) {
