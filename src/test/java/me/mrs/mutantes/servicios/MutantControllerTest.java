@@ -54,8 +54,8 @@ class MutantControllerTest {
     @DisplayName("WHEN a Human is inquired THEN should response HTTP_STATUS.OK")
     public void whenHumanIsInquiredThenShouldResponseOk() throws Exception {
         var objectMapper = new ObjectMapper();
-        var requestPayload = Collections.singletonMap("dna", Arrays.asList("ATGCGA", "CAGTGC", "TTATGT", "AGAAGG",
-                "CCACTA", "TCACTG"));
+        var requestPayload = Collections.singletonMap("dna",
+                Arrays.asList("ATGCGA", "CAGTAC", "TTATGT"));
 
         mockMvc
                 .perform(post("/mutant")
