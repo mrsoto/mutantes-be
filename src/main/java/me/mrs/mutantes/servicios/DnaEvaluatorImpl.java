@@ -22,8 +22,40 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
      */
     @Override
     public boolean isHuman(@NonNull Collection<String> dna) {
-        if (isRowMutant(dna)) return false;
-        return !isColumnMutant(dna);
+        return !isMutant(dna);
+    }
+
+    private boolean isMutant(Collection<String> dna) {
+        final int colSize = dna.stream().findFirst().map(String::length).orElseThrow();
+        int dnaSize = dna.size();
+        int[] horizontalCount = new int[dnaSize];
+        int[] verticalCount = new int[colSize];
+        String[] sequences = new String[dnaSize];
+        sequences = dna.toArray(sequences);
+
+        boolean notFirstRow = false;
+        for (int row = 0; row < dnaSize; row++) {
+            boolean notFirstCol = false;
+            for (int col = 0; col < colSize; col++) {
+                int current = sequences[row].codePointAt(col);
+                if (notFirstCol && sequences[row].codePointAt(col - 1) == current) {
+                    horizontalCount[row]++;
+                    if (horizontalCount[row] == 3) return true;
+                } else {
+                    horizontalCount[row] = 0;
+                }
+                if (notFirstRow && sequences[row - 1].codePointAt(col) == current) {
+                    verticalCount[col]++;
+                    if (verticalCount[col] == 3) return true;
+                } else {
+                    verticalCount[col] = 0;
+                }
+                notFirstCol = true;
+            }
+            notFirstRow = true;
+        }
+
+        return false;
     }
 
     public boolean isColumnMutant(@NonNull Collection<String> dna) {
@@ -32,9 +64,7 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
         int rowLength = dna.stream().findFirst().map(String::length).orElseThrow();
         return IntStream.range(0, rowLength).anyMatch(column -> {
             var collector = new HashMap<Character, Integer>();
-            dna
-                    .stream()
-                    .map(seq -> seq.charAt(column))
+            dna.stream().map(seq -> seq.charAt(column))
                     .forEach(chr -> collector.merge(chr, 1, Integer::sum));
             return collector.values().stream().anyMatch(count -> count >= 4);
         });

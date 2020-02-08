@@ -80,20 +80,25 @@ class DnaEvaluatorImplTest {
             // @formatter:off
             return Stream.of(
                     List.of(
-                            "*123",
-                            "*456",
-                            "*123",
-                            "*456"),
+                            "A123",
+                            "A456",
+                            "A123",
+                            "A456"),
                     List.of(
-                            "1*23",
-                            "4*56",
-                            "1*23",
-                            "4*56"),
+                            "1A23",
+                            "4A56",
+                            "1A23",
+                            "4A56"),
                     List.of(
-                            "123*",
-                            "456*",
-                            "123*",
-                            "456*")
+                            "123A",
+                            "456A",
+                            "123A",
+                            "456A"),
+                    List.of(
+                            "G1234C",
+                            "GAAAAC",
+                            "G1234C",
+                            "G4321C")
                     );
             // @formatter:on
         }
