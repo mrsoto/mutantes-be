@@ -2,11 +2,13 @@ package me.mrs.mutantes.servicios;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -47,6 +49,53 @@ class DnaEvaluatorImplTest {
                     .stream()
                     .map(symbol -> pattern.replace("*", symbol.repeat(4))));
         }
+
     }
 
+    @Nested
+    @TestInstance(PER_CLASS)
+    @DisplayName("WHEN a multiples rows are evaluated")
+    class MultipleRows {
+
+        @DisplayName("AND no 4 sequences exist THEN should be a Human")
+        @Test
+        void isHuman() {
+            var target = new DnaEvaluatorImpl();
+            var dna = List.of("ACGT", "CAGT", "GTAC", "TGCA");
+
+            assertTrue(target.isHuman(dna));
+        }
+
+        @DisplayName("AND 4 or more repeated sequences exist THEN should be a Mutant")
+        @ParameterizedTest(name = "Mutant dna={0}")
+        @MethodSource
+        void isMutantSingleCol(Collection<String> dna) {
+            var target = new DnaEvaluatorImpl();
+
+            assertFalse(target.isHuman(dna));
+        }
+
+        Stream<List<String>> isMutantSingleCol() {
+
+            // @formatter:off
+            return Stream.of(
+                    List.of(
+                            "*123",
+                            "*456",
+                            "*123",
+                            "*456"),
+                    List.of(
+                            "1*23",
+                            "4*56",
+                            "1*23",
+                            "4*56"),
+                    List.of(
+                            "123*",
+                            "456*",
+                            "123*",
+                            "456*")
+                    );
+            // @formatter:on
+        }
+    }
 }
