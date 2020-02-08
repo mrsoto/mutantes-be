@@ -43,10 +43,11 @@ class MutantControllerTest {
     }
 
     static private Stream<Collection<String>> invalidDnaSamples() {
+        List<String> emptyDna = Collections.emptyList();
         List<String> differentSizes = Arrays.asList("A", "TAGTGC");
         List<String> nullValues = Arrays.asList("CTGCGA", null, "ATCTGT");
         List<String> invalidSymbol = Arrays.asList("XAAAA", "AAAAA");
-        return Stream.of(differentSizes, nullValues, invalidSymbol);
+        return Stream.of(emptyDna, differentSizes, nullValues, invalidSymbol);
     }
 
     @Test

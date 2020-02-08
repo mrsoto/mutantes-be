@@ -9,7 +9,7 @@ public class DnaValidator implements ConstraintValidator<DnaConstraint, Collecti
     @Override
     public boolean isValid(Collection<String> dna, ConstraintValidatorContext constraintValidatorContext) {
         // TODO: Implement validator
-        var invalid = Set.of("A.TAGTGC", "CTGCGA.null.ATCTGT", "XAAAA.AAAAA");
+        var invalid = Set.of("", "A.TAGTGC", "CTGCGA.null.ATCTGT", "XAAAA.AAAAA");
         return !invalid.contains(String.join(".", dna));
     }
 }
