@@ -4,12 +4,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.IntStream;
 
 @Service
 public class DnaEvaluatorImpl implements DnaEvaluator {
+
+    public static final int MUTATION_REPETITION_COUNT = 4;
 
     /**
      * Evaluate a DNA looking for mutations. A mutation is identified by for linearly continuous
@@ -30,6 +29,8 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
         int dnaSize = dna.size();
         int[] horizontalCount = new int[dnaSize];
         int[] verticalCount = new int[colSize];
+        int[] norWestCount = new int[colSize * dnaSize];
+        int[] norEstCount = new int[colSize * dnaSize];
         String[] sequences = new String[dnaSize];
         sequences = dna.toArray(sequences);
 
@@ -40,15 +41,27 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
                 int current = sequences[row].codePointAt(col);
                 if (notFirstCol && sequences[row].codePointAt(col - 1) == current) {
                     horizontalCount[row]++;
-                    if (horizontalCount[row] == 3) return true;
+                    if (horizontalCount[row] == MUTATION_REPETITION_COUNT) return true;
                 } else {
-                    horizontalCount[row] = 0;
+                    horizontalCount[row] = 1;
                 }
                 if (notFirstRow && sequences[row - 1].codePointAt(col) == current) {
                     verticalCount[col]++;
-                    if (verticalCount[col] == 3) return true;
+                    if (verticalCount[col] == MUTATION_REPETITION_COUNT) return true;
                 } else {
-                    verticalCount[col] = 0;
+                    verticalCount[col] = 1;
+                }
+                if (notFirstCol && notFirstRow && sequences[row - 1].codePointAt(col - 1) == current) {
+                    norWestCount[row * colSize + col] =
+                            norWestCount[(row - 1) * colSize + (col - 1)] + 1;
+                    if (norWestCount[row * colSize + col] == MUTATION_REPETITION_COUNT - 1)
+                        return true;
+                }
+                if (col < colSize - 1 && notFirstRow && sequences[row - 1].codePointAt(col + 1) == current) {
+                    norEstCount[row * colSize + col] =
+                            norEstCount[(row - 1) * colSize + (col + 1)] + 1;
+                    if (norEstCount[row * colSize + col] == MUTATION_REPETITION_COUNT - 1)
+                        return true;
                 }
                 notFirstCol = true;
             }
@@ -58,20 +71,4 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
         return false;
     }
 
-    public boolean isColumnMutant(@NonNull Collection<String> dna) {
-        if (dna.size() < 4) return false;
-
-        int rowLength = dna.stream().findFirst().map(String::length).orElseThrow();
-        return IntStream.range(0, rowLength).anyMatch(column -> {
-            var collector = new HashMap<Character, Integer>();
-            dna.stream().map(seq -> seq.charAt(column))
-                    .forEach(chr -> collector.merge(chr, 1, Integer::sum));
-            return collector.values().stream().anyMatch(count -> count >= 4);
-        });
-    }
-
-    public boolean isRowMutant(@NonNull Collection<String> dna) {
-        var mutantSequence = List.of("AAAA", "CCCC", "TTTT", "GGGG");
-        return dna.stream().anyMatch(seq -> mutantSequence.stream().anyMatch(seq::contains));
-    }
 }

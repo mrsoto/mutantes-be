@@ -61,7 +61,7 @@ class DnaEvaluatorImplTest {
         @Test
         void isHuman() {
             var target = new DnaEvaluatorImpl();
-            var dna = List.of("ACGT", "CAGT", "GTAC", "TGCA");
+            var dna = List.of("ACGT", "CAGT", "GTAC", "TGACT");
 
             assertTrue(target.isHuman(dna));
         }
@@ -96,9 +96,19 @@ class DnaEvaluatorImplTest {
                             "456A"),
                     List.of(
                             "G1234C",
-                            "GAAAAC",
+                            "G****C",
                             "G1234C",
-                            "G4321C")
+                            "G4321C"),
+                    List.of(
+                            "*1234C",
+                            "G*123C",
+                            "G1*34C",
+                            "G43*1G"),
+                    List.of(
+                            "A1234*",
+                            "GA12*C",
+                            "G12*4C",
+                            "G4*A1G")
                     );
             // @formatter:on
         }
