@@ -3,7 +3,7 @@ package me.mrs.mutantes.servicios;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class DnaEvaluatorImpl implements DnaEvaluator {
@@ -35,8 +35,8 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
      * @return {@code true} when no mutation exists, {@code false} when a mutation is identified
      */
     @Override
-    public boolean isHuman(@NonNull Collection<String> dna) {
-        return !isMutant(dna.toArray(new String[0]));
+    public boolean isMutant(@NonNull List<String> dna) {
+        return isMutant(dna.toArray(new String[0]));
     }
 
     /**
@@ -45,7 +45,8 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
      * @param dna DNA sequence
      * @return {@code true} when a mutation is found
      */
-    private boolean isMutant(String[] dna) {
+    @Override
+    public boolean isMutant(String[] dna) {
         final int colSize = dna[0].length();
         final int dnaSize = dna.length;
         final int[] horizontalCount = new int[dnaSize];

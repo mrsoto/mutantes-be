@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,10 +26,10 @@ class DnaEvaluatorImplTest {
         @DisplayName("AND no 4 or more repeated sequences exist THEN should be a Human")
         @ParameterizedTest(name = "Human dna={0}")
         @ValueSource(strings = {"A", "ATGC", "AAAT", "AAATA"})
-        void isHuman(String dna) {
+        void isMutant(String dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertTrue(target.isHuman(List.of(dna)));
+            assertFalse(target.isMutant(List.of(dna)));
         }
 
         @DisplayName("AND 4 or more repeated sequences exist THEN should be a Mutant")
@@ -39,7 +38,7 @@ class DnaEvaluatorImplTest {
         void isMutantSingleRow(String dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertFalse(target.isHuman(List.of(dna)));
+            assertTrue(target.isMutant(List.of(dna)));
         }
 
         Stream<String> isMutantSingleRow() {
@@ -59,20 +58,20 @@ class DnaEvaluatorImplTest {
 
         @DisplayName("AND no 4 sequences exist THEN should be a Human")
         @Test
-        void isHuman() {
+        void isMutant() {
             var target = new DnaEvaluatorImpl();
             var dna = List.of("ACGT", "CAGT", "GTAC", "TGACT");
 
-            assertTrue(target.isHuman(dna));
+            assertFalse(target.isMutant(dna));
         }
 
         @DisplayName("AND 4 or more repeated sequences exist THEN should be a Mutant")
         @ParameterizedTest(name = "Mutant dna={0}")
         @MethodSource
-        void isMutantSingleCol(Collection<String> dna) {
+        void isMutantSingleCol(List<String> dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertFalse(target.isHuman(dna));
+            assertTrue(target.isMutant(dna));
         }
 
         Stream<List<String>> isMutantSingleCol() {
