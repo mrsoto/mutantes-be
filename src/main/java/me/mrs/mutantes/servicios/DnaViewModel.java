@@ -3,16 +3,16 @@ package me.mrs.mutantes.servicios;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Validated
 public class DnaViewModel {
     @NonNull
     @DnaConstraint
-    private Collection<String> dna;
+    private List<String> dna;
 
-    public DnaViewModel(@NonNull Collection<String> dna) {
+    public DnaViewModel(@NonNull List<String> dna) {
         this.dna = dna;
     }
 
@@ -21,8 +21,8 @@ public class DnaViewModel {
     }
 
     @NonNull
-    public Collection<String> getDna() {
-        return Collections.unmodifiableCollection(dna);
+    public List<String> getDna() {
+        return Collections.unmodifiableList(dna);
     }
 
     @Override
