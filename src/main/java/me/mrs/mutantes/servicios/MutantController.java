@@ -10,16 +10,24 @@ import javax.validation.Valid;
 
 @RestController
 public class MutantController {
-    private final DnaEvaluator evaluatorService;
+    private final DnaEvaluator dnaEvaluator;
+    private EvaluationsService evaluationsService;
+    private ModelMapper modelMapper;
 
-    public MutantController(@NonNull DnaEvaluator evaluatorService) {
-        this.evaluatorService = evaluatorService;
+    public MutantController(
+            @NonNull DnaEvaluator dnaEvaluator,
+            @NonNull EvaluationsService evaluationsService,
+            @NonNull ModelMapper modelMapper) {
+        this.dnaEvaluator = dnaEvaluator;
+        this.evaluationsService = evaluationsService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping(value = "/mutant")
     @ResponseBody
     public ResponseEntity<Void> isMutant(@Valid @RequestBody final DnaViewModel payload) {
-        boolean isMutan = evaluatorService.isMutant(payload.getDna());
+        boolean isMutan = dnaEvaluator.isMutant(payload.getDna());
+        evaluationsService.registerEvaluation(modelMapper.toBusinessModel(payload, isMutan));
         return new ResponseEntity<>(isMutan ? HttpStatus.FORBIDDEN : HttpStatus.OK);
     }
 
