@@ -1,0 +1,5 @@
+application:
+  queries:
+    insert:
+      statement: INSERT INTO dna(timestamp,sequence,mutant) values(?,?,?)
+      batchSize: 10

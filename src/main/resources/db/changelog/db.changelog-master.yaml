@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20200902-1
+      author: mrs
+      changes:
+        - createTable:
+            tableName: dna
+            columns:
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mutant
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sequence
+                  type: text
+                  constraints:
+                    nullable: false
