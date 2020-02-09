@@ -19,8 +19,8 @@ public class MutantController {
     @PostMapping(value = "/mutant")
     @ResponseBody
     public ResponseEntity<Void> isMutant(@Valid @RequestBody final DnaViewModel payload) {
-        return new ResponseEntity<>(evaluatorService.isHuman(payload.getDna()) ? HttpStatus.OK :
-                HttpStatus.FORBIDDEN);
+        boolean isMutan = evaluatorService.isMutant(payload.getDna());
+        return new ResponseEntity<>(isMutan ? HttpStatus.FORBIDDEN : HttpStatus.OK);
     }
 
     @GetMapping(value = "/")
