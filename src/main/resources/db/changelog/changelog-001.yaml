@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20200902-2
+      author: mrs
+      changes:
+        - modifyDataType:
+            tableName: dna
+            columnName: sequence
+            newDataType: TEXT

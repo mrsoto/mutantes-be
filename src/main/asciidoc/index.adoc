@@ -1,6 +1,39 @@
-= API
+= Mutants API
 
-== Mutant
+== Servicio: Mutant
+
+El servicio permite evaluar una cadena de ADN la cual puede pertenecer a un mutante.
+Se considera mutante cuando aparecen en línea y cualquier dirección (oblicua, horizontal o vertical) cuatro(4) bases iguales.
+
+En caso de no detectar mutación retornará un HTTP-STATUS=OK(200), en caso de detectar una mutación se tendrá un HTTP -STATUS=FORBIDDEN(403).
+
+=== Consultas ejemplo:
+
+Consulta de ADN de humano no mutante ejemplo:
+
+operation::human[]
+
+Consulta de ADN de humano *mutante* ejemplo:
 
 operation::mutant[]
+
+Sólo se permitirán ADN con secuencias que contengan bases identificadas por las letras *A*, *C*, *G*, *T*.
+Todas las secuencias de un ADN deben tener la misma longitud y representar una matriz (NxN).
+No se permiten secuencias vacías.
+
+En caso de llamar al servicio con datos incorrectos se recibirá un HTTP-STATUS=REJECTED(400).
+
+Ejemplos de llamadas al servicio con datos incorrectos.
+
+operation::dna-invalid[]
+
+== Servicio: Stats
+
+Permite consultar un sumario de las consultas realizadas
+
+=== Consultas ejemplo:
+
+operation::stats[]
+
+Nota: En caso de no haber consultas el ``ratio`` estará en ``null``
 

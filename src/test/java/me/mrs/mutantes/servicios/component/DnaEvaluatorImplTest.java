@@ -1,4 +1,4 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.component;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
