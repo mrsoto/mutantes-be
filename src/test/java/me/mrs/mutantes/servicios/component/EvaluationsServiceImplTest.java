@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -17,8 +16,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -78,10 +75,6 @@ class EvaluationsServiceImplTest {
             @DisplayName("THEN insert submissions")
             @Test
             void thenInsertSubmissions() {
-                var lock = Mockito.mock(Lock.class);
-                var queueAvailable = Mockito.mock(Condition.class);
-                ReflectionTestUtils.setField(target, "lock", lock);
-                ReflectionTestUtils.setField(target, "queueAvailable", queueAvailable);
                 var queue = getInternalQueue(target);
                 queue.addAll(evaluationModelList);
                 var targetSpy = spy(target);
@@ -94,7 +87,6 @@ class EvaluationsServiceImplTest {
                 var savedList = listArgumentCaptor.getValue();
                 assertEquals(1, savedList.size());
                 assertEquals(evaluation, savedList.get(0));
-                verifyNoInteractions(lock);
             }
         }
 
@@ -106,10 +98,6 @@ class EvaluationsServiceImplTest {
             void whenSubmitFail() {
                 doThrow(ThroedException.class).when(repository).batchInsert(any());
 
-                var lock = Mockito.mock(Lock.class);
-                var queueAvailable = Mockito.mock(Condition.class);
-                ReflectionTestUtils.setField(target, "lock", lock);
-                ReflectionTestUtils.setField(target, "queueAvailable", queueAvailable);
                 var queue = getInternalQueue(target);
                 queue.addAll(evaluationModelList);
                 var targetSpy = spy(target);
@@ -119,9 +107,6 @@ class EvaluationsServiceImplTest {
 
                 assertEquals(1, queue.size());
                 assertTrue(queue.contains(evaluation));
-                verify(lock, times(1)).lock();
-                verify(lock, times(1)).unlock();
-                verify(queueAvailable).signal();
             }
 
             class ThroedException extends DataAccessException {
