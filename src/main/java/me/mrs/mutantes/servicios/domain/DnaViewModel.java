@@ -1,6 +1,5 @@
 package me.mrs.mutantes.servicios.domain;
 
-import me.mrs.mutantes.servicios.DnaConstraint;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
