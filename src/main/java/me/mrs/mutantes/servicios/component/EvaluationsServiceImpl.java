@@ -69,12 +69,7 @@ public class EvaluationsServiceImpl implements EvaluationsService {
     private void submitToRetry(List<EvaluationModel> evaluations) throws InterruptedException {
         Thread.sleep(durationToRetryMs);
         queue.addAll(evaluations);
-        lock.lock();
-        try {
-            queueAvailable.signal();
-        } finally {
-            lock.unlock();
-        }
+        signalAvailable();
     }
 
     private List<EvaluationModel> getEvaluationModels() throws InterruptedException {
@@ -102,9 +97,13 @@ public class EvaluationsServiceImpl implements EvaluationsService {
 
     @Override
     public void registerEvaluation(EvaluationModel evaluation) {
+        queue.add(evaluation);
+        signalAvailable();
+    }
+
+    public void signalAvailable() {
         lock.lock();
         try {
-            queue.add(evaluation);
             queueAvailable.signal();
         } finally {
             lock.unlock();
