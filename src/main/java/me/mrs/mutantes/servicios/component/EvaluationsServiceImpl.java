@@ -15,11 +15,6 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static java.lang.Integer.max;
 
 @Service
 public class EvaluationsServiceImpl implements EvaluationsService {
@@ -27,8 +22,6 @@ public class EvaluationsServiceImpl implements EvaluationsService {
 
     private final BlockingQueue<EvaluationModel> queue;
     private final EvaluationsRepository repository;
-    private final Lock lock = new ReentrantLock();
-    private final Condition queueAvailable = lock.newCondition();
     private final long durationToRetryMs;
     private boolean running;
 
@@ -53,7 +46,7 @@ public class EvaluationsServiceImpl implements EvaluationsService {
                 }
             }
         } catch (InterruptedException e) {
-            logger.info(e.getMessage());
+            logger.info("Finish");
             Thread.currentThread().interrupt();
         }
     }
@@ -69,19 +62,13 @@ public class EvaluationsServiceImpl implements EvaluationsService {
     private void submitToRetry(List<EvaluationModel> evaluations) throws InterruptedException {
         Thread.sleep(durationToRetryMs);
         queue.addAll(evaluations);
-        signalAvailable();
     }
 
     private List<EvaluationModel> getEvaluationModels() throws InterruptedException {
         var evaluations = new ArrayList<EvaluationModel>(queue.size());
-        while (queue.drainTo(evaluations, max(repository.getSupportedBatchSize(), 1)) == 0) {
-            lock.lock();
-            try {
-                queueAvailable.await();
-            } finally {
-                lock.unlock();
-            }
-        }
+        evaluations.add(queue.take());
+        evaluations.ensureCapacity(queue.size() + 1);
+        queue.drainTo(evaluations);
         return evaluations;
     }
 
@@ -98,15 +85,6 @@ public class EvaluationsServiceImpl implements EvaluationsService {
     @Override
     public void registerEvaluation(EvaluationModel evaluation) {
         queue.add(evaluation);
-        signalAvailable();
     }
 
-    public void signalAvailable() {
-        lock.lock();
-        try {
-            queueAvailable.signal();
-        } finally {
-            lock.unlock();
-        }
-    }
 }
