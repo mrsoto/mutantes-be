@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - include:
+      - file: db/changelog/changelog-000.yaml
+# for CLOB dna column
+#  - include:
+#    - file: db/changelog/changelog-001.yaml

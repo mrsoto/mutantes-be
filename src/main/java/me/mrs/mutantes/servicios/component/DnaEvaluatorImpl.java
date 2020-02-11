@@ -1,5 +1,7 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.component;
 
+import me.mrs.mutantes.servicios.DnaEvaluator;
+import me.mrs.mutantes.servicios.domain.DnaValidator;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -51,43 +53,40 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
         final int dnaSize = dna.length;
         final int[] horizontalCount = new int[dnaSize];
         final int[] verticalCount = new int[colSize];
-        final int[] norWestCount = new int[colSize * dnaSize];
-        final int[] norEstCount = new int[colSize * dnaSize];
+        final int[][] norWestCount = new int[dnaSize][colSize];
+        final int[][] norEstCount = new int[dnaSize][colSize];
 
-        boolean notFirstRow = false;
         for (int row = 0; row < dnaSize; row++) { // O(N)
             boolean notFirstCol = false;
-            for (int col = 0; col < colSize; col++) { // O(N)
+            for (int col = 0; col < colSize; col++, notFirstCol = true) { // O(N)
                 int currentBase = baseAt(dna, row, col); // O(1)
+
                 if (notFirstCol && baseAt(dna, row, col - 1) == currentBase) {
                     horizontalCount[row]++;
                     if (horizontalCount[row] == MUTATION_REPETITION_COUNT) return true;
                 } else {
                     horizontalCount[row] = 1;
                 }
-                if (notFirstRow && baseAt(dna, row - 1, col) == currentBase) {
-                    verticalCount[col]++;
-                    if (verticalCount[col] == MUTATION_REPETITION_COUNT) return true;
-                } else {
-                    verticalCount[col] = 1;
+
+                if (row != 0) {
+                    if (baseAt(dna, row - 1, col) == currentBase) {
+                        verticalCount[col]++;
+                        if (verticalCount[col] == MUTATION_REPETITION_COUNT) return true;
+                    } else {
+                        verticalCount[col] = 1;
+                    }
+                    if (notFirstCol && baseAt(dna, row - 1, col - 1) == currentBase) {
+                        norWestCount[row][col] = norWestCount[row - 1][col - 1] + 1;
+                        if (norWestCount[row][col] == MUTATION_REPETITION_COUNT - 1) return true;
+                    }
+
+                    boolean notLastCol = col < colSize - 1;
+                    if (notLastCol && baseAt(dna, row - 1, col + 1) == currentBase) {
+                        norEstCount[row][col] = norEstCount[row - 1][col + 1] + 1;
+                        if (norEstCount[row][col] == MUTATION_REPETITION_COUNT - 1) return true;
+                    }
                 }
-                if (notFirstCol && notFirstRow && baseAt(dna, row - 1, col - 1) == currentBase) {
-                    norWestCount[row * colSize + col] =
-                            norWestCount[(row - 1) * colSize + (col - 1)] + 1;
-                    if (norWestCount[row * colSize + col] == MUTATION_REPETITION_COUNT - 1)
-                        return true;
-                }
-                if (col < colSize - 1 && notFirstRow && baseAt(dna,
-                        row - 1,
-                        col + 1) == currentBase) {
-                    norEstCount[row * colSize + col] =
-                            norEstCount[(row - 1) * colSize + (col + 1)] + 1;
-                    if (norEstCount[row * colSize + col] == MUTATION_REPETITION_COUNT - 1)
-                        return true;
-                }
-                notFirstCol = true;
             }
-            notFirstRow = true;
         }
 
         return false;

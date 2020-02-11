@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:h2:mem:}
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+  cache:
+    type: CAFFEINE
+    cache-names:
+      - stats
+    caffeine:
+      spec: "maximumSize=1,expireAfterWrite=2s"
+
+application:
+  queries:
+    insert:
+      statement: INSERT INTO dna(timestamp,sequence,mutant) values(?,?,?)
+      batchSize: 1000
+      clob: false
+  stats:
+    update:
+      statement: UPDATE summary SET (mutants, humans) = (mutants + :mutants, humans + :humans)
+    query:
+      statement: SELECT humans, mutants FROM summary
+  evaluations:
+    persistence:
+      queue:
+        capacity: 1000
+        retryMs: 1000
+
