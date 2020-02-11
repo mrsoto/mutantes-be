@@ -1,7 +1,5 @@
 package me.mrs.mutantes.servicios.domain;
 
-import me.mrs.mutantes.servicios.DnaConstraint;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;

@@ -1,6 +1,4 @@
-package me.mrs.mutantes.servicios;
-
-import me.mrs.mutantes.servicios.domain.DnaValidator;
+package me.mrs.mutantes.servicios.domain;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

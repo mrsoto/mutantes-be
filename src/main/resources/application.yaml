@@ -22,6 +22,8 @@ application:
       statement: UPDATE summary SET (mutants, humans) = (mutants + :mutants, humans + :humans)
     query:
       statement: SELECT humans, mutants FROM summary
+    cache:
+      max-age: 2
   evaluations:
     persistence:
       queue:

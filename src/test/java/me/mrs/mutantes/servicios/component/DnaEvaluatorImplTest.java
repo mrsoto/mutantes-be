@@ -108,7 +108,7 @@ class DnaEvaluatorImplTest {
                             "GA12*C",
                             "G12*4C",
                             "G4*A1G")
-                    );
+            );
             // @formatter:on
         }
     }

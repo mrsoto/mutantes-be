@@ -68,13 +68,13 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
                     horizontalCount[row] = 1;
                 }
 
+                if (row != 0 && baseAt(dna, row - 1, col) == currentBase) {
+                    verticalCount[col]++;
+                    if (verticalCount[col] == MUTATION_REPETITION_COUNT) return true;
+                } else {
+                    verticalCount[col] = 1;
+                }
                 if (row != 0) {
-                    if (baseAt(dna, row - 1, col) == currentBase) {
-                        verticalCount[col]++;
-                        if (verticalCount[col] == MUTATION_REPETITION_COUNT) return true;
-                    } else {
-                        verticalCount[col] = 1;
-                    }
                     if (notFirstCol && baseAt(dna, row - 1, col - 1) == currentBase) {
                         norWestCount[row][col] = norWestCount[row - 1][col - 1] + 1;
                         if (norWestCount[row][col] == MUTATION_REPETITION_COUNT - 1) return true;

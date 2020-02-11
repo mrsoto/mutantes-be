@@ -1,6 +1,5 @@
 package me.mrs.mutantes.servicios.domain;
 
-import me.mrs.mutantes.servicios.StatsViewModel;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
