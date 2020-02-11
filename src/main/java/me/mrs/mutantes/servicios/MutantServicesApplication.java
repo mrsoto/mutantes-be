@@ -19,7 +19,7 @@ public class MutantServicesApplication {
         SpringApplication.run(MutantServicesApplication.class, args);
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public DataSource dataSource(@Value("${spring.datasource.url}") String dbUrl) {
         if (dbUrl == null || dbUrl.isEmpty()) {
             return new HikariDataSource();
