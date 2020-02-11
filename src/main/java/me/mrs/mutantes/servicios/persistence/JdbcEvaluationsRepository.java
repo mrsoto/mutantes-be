@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,6 +50,7 @@ public class JdbcEvaluationsRepository implements EvaluationsRepository {
     }
 
     @Override
+    @Transactional
     public void batchInsert(List<EvaluationModel> evaluations) {
         long mutants = evaluations.stream().filter(EvaluationModel::isMutant).count();
         int humans = evaluations.size();
@@ -61,7 +63,6 @@ public class JdbcEvaluationsRepository implements EvaluationsRepository {
                 humans,
                 mutants);
 
-        // TODO: Handle partial inserts
         jdbcTemplate.batchUpdate(insertStatement, evaluations, batchSize, parametrizedInsertSetter);
 
         var updates = namedParametersJdbcTemplate.update(updateStatsStatement, sqlParameters);
