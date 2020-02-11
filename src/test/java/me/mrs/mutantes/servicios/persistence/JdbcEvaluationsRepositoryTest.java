@@ -1,6 +1,8 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.persistence;
 
 import liquibase.integration.spring.SpringLiquibase;
+import me.mrs.mutantes.servicios.domain.EvaluationModel;
+import me.mrs.mutantes.servicios.domain.StatsModel;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,42 +18,58 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DisplayName("GIVEN a Evaluations Repository")
-class EvaluationsRepositoryImplTest {
+class JdbcEvaluationsRepositoryTest {
 
     @Autowired
-    EvaluationsRepositoryImpl target;
+    JdbcEvaluationsRepository target;
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    LocalConfig localConfig;
 
     @Test
     @DisplayName("SHOULD insert batch queries into the database")
     void batchInsert() {
-        Instant now = Instant.now();
-        Collection<QueryModel> quieries = List.of(new QueryModel[]{new QueryModel("AAAA",
-                true,
-                now), new QueryModel("AACC,ACGT", false, now),});
+        var now = Instant.now();
+        var mod1 = new EvaluationModel(List.of("AAAA"), true, now);
+        var mod2 = new EvaluationModel(List.of("AACC", "ACGT"), false, now);
+        var mod3 = new EvaluationModel(List.of("AACC"), false, now);
+        var queries = List.of(new EvaluationModel[]{mod1, mod2, mod3,});
 
-        target.batchInsert(quieries);
+        target.batchInsert(queries);
 
         int insertCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, "dna");
         var humanCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
                 "dna",
-                "sequence = 'AACC,ACGT' and mutant='f'");
+                "sequence in ( 'AACC,ACGT','AACC') and mutant='f'");
         var mutantCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
                 "dna",
                 "sequence = 'AAAA' and mutant='t'");
 
-        Assertions.assertAll("After all Queries are inserted",
-                () -> assertEquals(2, insertCount),
-                () -> assertEquals(1, humanCount),
+        var statsCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, "summary");
+        StatsModel stats = target.getStats();
+
+        assertAll("After all Queries are inserted",
+                () -> assertEquals(3, insertCount),
+                () -> assertEquals(2, humanCount),
                 () -> assertEquals(1, mutantCount));
+
+        assertAll("After stats ware updated",
+                () -> assertEquals(1, statsCount),
+                () -> assertEquals(3, stats.getHumans()),
+                () -> assertEquals(1, stats.getMutants()),
+                () -> assertTrue(1d / 3d - stats.getRatio() < 1E-6));
+    }
+
+    @Test
+    void getSupportedBatchSize() {
+        Assertions.assertEquals(localConfig.batchSize, target.getSupportedBatchSize());
     }
 
     @Configuration
@@ -61,10 +79,14 @@ class EvaluationsRepositoryImplTest {
 
         @Value("${application.queries.insert.statement}")
         String insertStatement;
+        @Value("${application.stats.update.statement}")
+        private String updateStatsStatement;
+        @Value("${application.stats.query.statement}")
+        private String queryStatsStatement;
 
         @Bean
-        ParametrizedDnaInsertSetter parametrizedDnaInsertSetter() {
-            return new ParametrizedDnaInsertSetter();
+        DnaPrepareInsertStatementSetter parametrizedDnaInsertSetter() {
+            return new DnaPrepareInsertStatementSetter(false);
         }
 
         @Bean
@@ -79,10 +101,12 @@ class EvaluationsRepositoryImplTest {
         }
 
         @Bean
-        EvaluationsRepositoryImpl evaluationsRepository() {
-            return new EvaluationsRepositoryImpl(jdbcTemplate(),
+        JdbcEvaluationsRepository evaluationsRepository() {
+            return new JdbcEvaluationsRepository(jdbcTemplate(),
                     batchSize,
                     insertStatement,
+                    updateStatsStatement,
+                    queryStatsStatement,
                     parametrizedDnaInsertSetter());
         }
 

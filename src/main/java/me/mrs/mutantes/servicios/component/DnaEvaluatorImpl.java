@@ -1,5 +1,7 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.component;
 
+import me.mrs.mutantes.servicios.DnaEvaluator;
+import me.mrs.mutantes.servicios.domain.DnaValidator;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 

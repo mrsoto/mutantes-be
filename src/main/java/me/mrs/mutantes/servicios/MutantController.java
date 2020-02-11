@@ -1,10 +1,14 @@
 package me.mrs.mutantes.servicios;
 
+import me.mrs.mutantes.servicios.domain.DnaViewModel;
+import me.mrs.mutantes.servicios.domain.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -26,13 +30,8 @@ public class MutantController {
     @PostMapping(value = "/mutant")
     @ResponseBody
     public ResponseEntity<Void> isMutant(@Valid @RequestBody final DnaViewModel payload) {
-        boolean isMutan = dnaEvaluator.isMutant(payload.getDna());
-        evaluationsService.registerEvaluation(modelMapper.toBusinessModel(payload, isMutan));
-        return new ResponseEntity<>(isMutan ? HttpStatus.FORBIDDEN : HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/")
-    public RedirectView redirectWithUsingRedirectView() {
-        return new RedirectView("/docs/index.html");
+        boolean isMutant = dnaEvaluator.isMutant(payload.getDna());
+        evaluationsService.registerEvaluation(modelMapper.toBusinessModel(payload, isMutant));
+        return new ResponseEntity<>(isMutant ? HttpStatus.FORBIDDEN : HttpStatus.OK);
     }
 }

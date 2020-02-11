@@ -1,6 +1,9 @@
 package me.mrs.mutantes.servicios;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.mrs.mutantes.servicios.component.DnaEvaluatorImpl;
+import me.mrs.mutantes.servicios.domain.EvaluationModel;
+import me.mrs.mutantes.servicios.domain.ModelMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,7 +71,7 @@ class MutantControllerTest {
                 "AGAACG",
                 "CTATCA",
                 "TCACTG");
-        return Stream.of(horizontalC, diagonalLetterC, verticalLetterC);
+        return Stream.of(diagonalLetterC, verticalLetterC, horizontalC);
     }
 
     static private Stream<Collection<String>> invalidDnaSamples() {
@@ -83,7 +86,7 @@ class MutantControllerTest {
     @DisplayName("WHEN a Human is inquired THEN should response HTTP_STATUS.OK")
     public void whenHumanIsInquiredThenShouldResponseOk() throws Exception {
         var objectMapper = new ObjectMapper();
-        List<String> dnaSequence = Arrays.asList("ATGCGA", "CAGTAC", "TTATGT");
+        List<String> dnaSequence = Arrays.asList("ATGC", "CAGT", "TTAT", "TTAG");
         var requestPayload = Collections.singletonMap("dna", dnaSequence);
 
         whenDnaIsEvaluated(dnaSequence,
@@ -93,7 +96,7 @@ class MutantControllerTest {
                                 .content(objectMapper.writeValueAsString(requestPayload)))
                         .andDo(print())
                         .andExpect(status().isOk())
-                        .andDo(document("mutant")),
+                        .andDo(document("human")),
                 false);
 
     }
@@ -149,7 +152,7 @@ class MutantControllerTest {
                                 .content(objectMapper.writeValueAsString(requestPayload)))
                         .andDo(print())
                         .andExpect(status().isBadRequest())
-                        .andDo(document("mutant")));
+                        .andDo(document("dna-invalid")));
 
     }
 

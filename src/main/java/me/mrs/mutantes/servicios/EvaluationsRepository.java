@@ -1,7 +1,14 @@
 package me.mrs.mutantes.servicios;
 
-import java.util.Collection;
+import me.mrs.mutantes.servicios.domain.EvaluationModel;
+import me.mrs.mutantes.servicios.domain.StatsModel;
+
+import java.util.List;
 
 public interface EvaluationsRepository {
-    int[][] batchInsert(Collection<QueryModel> queries);
+    int getSupportedBatchSize();
+
+    void batchInsert(List<EvaluationModel> evaluations);
+
+    StatsModel getStats();
 }

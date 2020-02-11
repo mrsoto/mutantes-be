@@ -1,0 +1,42 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+= Examen Mercadolibre
+
+== Instrucciones para compilar y ejecutar
+
+El proyecto está basado en Spring Boot ``2.2.4.RELEASE``.
+
+Pre-requisitos:
+
+- Java 11
+- Puerto libre en localhost: 8080
+
+Comando:
+
+En una consola se debe indicar el siguiente comando:
+
+- Compilar
+
+``mvnw clean package``
+
+- Ejecutar
+
+``mvnw package spring-boot:run``
+
+Una vez iniciada la aplicación es posible consumir sus servicios según se indica en la documentación, para ello abrir el navegador en la siguiente dirección:
+
+``http://localhost:8080/``
+
+== Ubicación de desafíos
+
+- El desafío #1 se encuentra en la clase ``me.mrs.mutantes.servicios.component.DnaEvaluatorImpl``
+
+- Desafíos #2 y #3. El URL publicado en Cloud se entrega directamente para evitar ataques.
+
+Nota: La base de datos para el desafío #3 se crea automáticamente mediante ``liquibase`` según configuración en ``resources/db/changelog``.
+Cualquier cambio a la estructura se realiza agregando change logs en lugar de cambiando los existentes.

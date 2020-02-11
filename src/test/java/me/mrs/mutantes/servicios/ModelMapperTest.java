@@ -1,10 +1,14 @@
 package me.mrs.mutantes.servicios;
 
-import org.junit.jupiter.api.Assertions;
+import me.mrs.mutantes.servicios.domain.DnaViewModel;
+import me.mrs.mutantes.servicios.domain.ModelMapper;
+import me.mrs.mutantes.servicios.domain.StatsModel;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ModelMapperTest {
 
@@ -15,10 +19,22 @@ class ModelMapperTest {
         var target = new ModelMapper();
         var start = Instant.now();
         var dest = target.toBusinessModel(source, true);
-        Assertions.assertNotNull(dest);
-        Assertions.assertAll("Comparing field by field",
-                () -> Assertions.assertEquals(source.getDna(), dest.getDna()),
-                () -> Assertions.assertTrue(dest.isMutant()),
-                () -> Assertions.assertEquals(start, dest.getTimestamp()));
+        assertNotNull(dest);
+        assertAll("Comparing field by field",
+                () -> assertEquals(source.getDna(), dest.getDna()),
+                () -> assertTrue(dest.isMutant()),
+                () -> assertEquals(start, dest.getTimestamp()));
+    }
+
+    @Test
+    void toViewModel() {
+        var target = new ModelMapper();
+        var stats = new StatsModel(10L, 4L);
+        var actual = target.toViewModel(stats);
+
+        assertNotNull(actual);
+        assertEquals(10L, actual.getHumans());
+        assertEquals(4L, actual.getMutants());
+        assertEquals(0.4d, actual.getRatio());
     }
 }

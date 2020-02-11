@@ -1,4 +1,4 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.domain;
 
 import org.springframework.lang.NonNull;
 
