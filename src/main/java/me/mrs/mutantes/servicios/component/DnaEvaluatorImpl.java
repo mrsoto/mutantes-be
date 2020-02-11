@@ -71,20 +71,20 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
 
                 if (row != 0 && baseAt(dna, row - 1, col) == currentBase) {
                     verticalCount[col]++;
-                    if (verticalCount[col] == MUTATION_REPETITION_COUNT) return true;
+                    if (verticalCount[col] == MUTATION_REPETITION_COUNT) founds++;
                 } else {
                     verticalCount[col] = 1;
                 }
                 if (row != 0) {
                     if (notFirstCol && baseAt(dna, row - 1, col - 1) == currentBase) {
                         norWestCount[row][col] = norWestCount[row - 1][col - 1] + 1;
-                        if (norWestCount[row][col] == MUTATION_REPETITION_COUNT - 1) return true;
+                        if (norWestCount[row][col] == MUTATION_REPETITION_COUNT - 1) founds++;
                     }
 
                     boolean notLastCol = col < colSize - 1;
                     if (notLastCol && baseAt(dna, row - 1, col + 1) == currentBase) {
                         norEstCount[row][col] = norEstCount[row - 1][col + 1] + 1;
-                        if (norEstCount[row][col] == MUTATION_REPETITION_COUNT - 1) return true;
+                        if (norEstCount[row][col] == MUTATION_REPETITION_COUNT - 1) founds++;
                     }
                 }
             }
