@@ -55,15 +55,16 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
         final int[] verticalCount = new int[colSize];
         final int[][] norWestCount = new int[dnaSize][colSize];
         final int[][] norEstCount = new int[dnaSize][colSize];
+        int founds = 0;
 
-        for (int row = 0; row < dnaSize; row++) { // O(N)
+        for (int row = 0; row < dnaSize && founds < 2; row++) { // O(N)
             boolean notFirstCol = false;
-            for (int col = 0; col < colSize; col++, notFirstCol = true) { // O(N)
+            for (int col = 0; col < colSize && founds < 2; col++, notFirstCol = true) { // O(N)
                 int currentBase = baseAt(dna, row, col); // O(1)
 
                 if (notFirstCol && baseAt(dna, row, col - 1) == currentBase) {
                     horizontalCount[row]++;
-                    if (horizontalCount[row] == MUTATION_REPETITION_COUNT) return true;
+                    if (horizontalCount[row] == MUTATION_REPETITION_COUNT) founds++;
                 } else {
                     horizontalCount[row] = 1;
                 }
@@ -89,7 +90,7 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
             }
         }
 
-        return false;
+        return founds == 2;
     }
 
     private int baseAt(String[] dna, int row, int col) {
