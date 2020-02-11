@@ -27,7 +27,7 @@ public class MutantController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping(value = "/mutant")
+    @PostMapping(value = "/mutant/")
     @ResponseBody
     public ResponseEntity<Void> isMutant(@Valid @RequestBody final DnaViewModel payload) {
         boolean isMutant = dnaEvaluator.isMutant(payload.getDna());
