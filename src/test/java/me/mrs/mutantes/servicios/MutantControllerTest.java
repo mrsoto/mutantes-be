@@ -89,7 +89,7 @@ class MutantControllerTest {
 
         whenDnaIsEvaluated(dnaSequence,
                 () -> mockMvc
-                        .perform(post("/mutant")
+                        .perform(post("/mutant/")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(requestPayload)))
                         .andDo(print())
@@ -127,7 +127,7 @@ class MutantControllerTest {
         var requestPayload = Collections.singletonMap("dna", dna);
         whenDnaIsEvaluated(dna,
                 () -> mockMvc
-                        .perform(post("/mutant")
+                        .perform(post("/mutant/")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(requestPayload)))
                         .andDo(print())
@@ -145,7 +145,7 @@ class MutantControllerTest {
         var requestPayload = Collections.singletonMap("dna", dna);
         whenDnaCantBeEvaluated(dna,
                 () -> mockMvc
-                        .perform(post("/mutant")
+                        .perform(post("/mutant/")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(requestPayload)))
                         .andDo(print())
