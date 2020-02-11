@@ -53,25 +53,23 @@ class MutantControllerTest {
     private MockMvc mockMvc;
 
     static private Stream<Collection<String>> mutantSamples() {
-        List<String> horizontalC = Arrays.asList("ATGAGT",
+        // @formatter:off
+        List<String> horizontalCAndDiagonalA = Arrays.asList(
+                "ATGAGT",
                 "TAGTGC",
                 "ATATGT",
                 "AGAAGG",
                 "CCCCTA",
                 "TCATTG");
-        List<String> diagonalLetterC = Arrays.asList("CTGCGA",
+        List<String> VerticalGHorizintalA = Arrays.asList(
+                "CTGCGA",
                 "ACATGC",
                 "ATCTGT",
-                "AGACGA",
+                "AAAAGA",
                 "GATGCA",
                 "TCACTG");
-        List<String> verticalLetterC = Arrays.asList("TTGCGA",
-                "AAGTCC",
-                "ATATCT",
-                "AGAACG",
-                "CTATCA",
-                "TCACTG");
-        return Stream.of(diagonalLetterC, verticalLetterC, horizontalC);
+        // @formatter:on
+        return Stream.of(VerticalGHorizintalA, horizontalCAndDiagonalA);
     }
 
     static private Stream<Collection<String>> invalidDnaSamples() {
@@ -86,7 +84,7 @@ class MutantControllerTest {
     @DisplayName("WHEN a Human is inquired THEN should response HTTP_STATUS.OK")
     public void whenHumanIsInquiredThenShouldResponseOk() throws Exception {
         var objectMapper = new ObjectMapper();
-        List<String> dnaSequence = Arrays.asList("ATGC", "CAGT", "TTAT", "TTAG");
+        List<String> dnaSequence = Arrays.asList("AAAA", "CAGT", "TTAT", "TTAG");
         var requestPayload = Collections.singletonMap("dna", dnaSequence);
 
         whenDnaIsEvaluated(dnaSequence,

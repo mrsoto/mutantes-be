@@ -38,7 +38,7 @@ class DnaEvaluatorImplTest {
         void isMutantSingleRow(String dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertTrue(target.isMutant(List.of(dna)));
+            assertFalse(target.isMutant(List.of(dna)));
         }
 
         Stream<String> isMutantSingleRow() {
@@ -81,30 +81,33 @@ class DnaEvaluatorImplTest {
                     List.of(
                             "A123",
                             "A456",
-                            "A123",
+                            "AAAA",
                             "A456"),
                     List.of(
                             "1A23",
                             "4A56",
                             "1A23",
-                            "4A56"),
+                            "4A56",
+                            "BBBB"
+                    ),
                     List.of(
                             "123A",
                             "456A",
                             "123A",
-                            "456A"),
+                            "456A",
+                            "BBBB"),
                     List.of(
                             "G1234C",
                             "G****C",
                             "G1234C",
                             "G4321C"),
                     List.of(
-                            "*1234C",
+                            "*1111C",
                             "G*123C",
                             "G1*34C",
                             "G43*1G"),
                     List.of(
-                            "A1234*",
+                            "A4444*",
                             "GA12*C",
                             "G12*4C",
                             "G4*A1G")
