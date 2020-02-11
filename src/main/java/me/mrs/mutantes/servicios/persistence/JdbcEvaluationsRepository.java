@@ -56,7 +56,7 @@ public class JdbcEvaluationsRepository implements EvaluationsRepository {
                 .addValue("mutants", mutants)
                 .addValue("humans", humans);
 
-        logger.info("Inserting {} inquires. Humans:{} Mutants:{}",
+        logger.debug("Inserting {} inquires. Humans:{} Mutants:{}",
                 evaluations.size(),
                 humans,
                 mutants);
