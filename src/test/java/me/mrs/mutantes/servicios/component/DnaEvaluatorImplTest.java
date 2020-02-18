@@ -1,5 +1,6 @@
 package me.mrs.mutantes.servicios.component;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class DnaEvaluatorImplTest {
         void isMutant(String dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertFalse(target.isMutant(List.of(dna)));
+            assertFalse(target.isMutant(Arrays.array(dna)));
         }
 
         @DisplayName("AND 4 or more repeated sequences exist THEN should be a Mutant")
@@ -38,7 +39,7 @@ class DnaEvaluatorImplTest {
         void isMutantSingleRow(String dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertFalse(target.isMutant(List.of(dna)));
+            assertFalse(target.isMutant(Arrays.array(dna)));
         }
 
         Stream<String> isMutantSingleRow() {
@@ -60,7 +61,7 @@ class DnaEvaluatorImplTest {
         @Test
         void isMutant() {
             var target = new DnaEvaluatorImpl();
-            var dna = List.of("ACGT", "CAGT", "GTAC", "TGACT");
+            var dna = Arrays.array("ACGT", "CAGT", "GTAC", "TGACT");
 
             assertFalse(target.isMutant(dna));
         }
@@ -71,7 +72,7 @@ class DnaEvaluatorImplTest {
         void isMutantSingleCol(List<String> dna) {
             var target = new DnaEvaluatorImpl();
 
-            assertTrue(target.isMutant(dna));
+            assertTrue(target.isMutant(dna.toArray(new String[0])));
         }
 
         Stream<List<String>> isMutantSingleCol() {

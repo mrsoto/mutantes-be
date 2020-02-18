@@ -1,7 +1,7 @@
 package me.mrs.mutantes.servicios;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.mrs.mutantes.servicios.component.DnaEvaluatorImpl;
+import me.mrs.mutantes.servicios.component.*;
 import me.mrs.mutantes.servicios.domain.EvaluationModel;
 import me.mrs.mutantes.servicios.domain.ModelMapper;
 import org.junit.jupiter.api.Assertions;
@@ -14,14 +14,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -33,13 +33,10 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
 
-@WebMvcTest(MutantController.class)
+@WebFluxTest(MutantController.class)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 @DisplayName("GIVEN a Human Controller")
@@ -50,7 +47,7 @@ class MutantControllerTest {
     @Captor
     ArgumentCaptor<EvaluationModel> evaluationModelArgumentCaptor;
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     static private Stream<Collection<String>> mutantSamples() {
         // @formatter:off
@@ -87,15 +84,15 @@ class MutantControllerTest {
         List<String> dnaSequence = Arrays.asList("AAAA", "CAGT", "TTAT", "TTAG");
         var requestPayload = Collections.singletonMap("dna", dnaSequence);
 
-        whenDnaIsEvaluated(dnaSequence,
-                () -> mockMvc
-                        .perform(post("/mutant/")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(requestPayload)))
-                        .andDo(print())
-                        .andExpect(status().isOk())
-                        .andDo(document("human")),
-                false);
+        webTestClient
+                .post()
+                .uri("/mutant/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(objectMapper.writeValueAsString(requestPayload))
+                .exchange()
+                .expectStatus()
+                .isOk();
 
     }
 
@@ -125,15 +122,15 @@ class MutantControllerTest {
     public void whenAMutantIsInquiredThenShouldResponseForbidden(List<String> dna) throws Exception {
         var objectMapper = new ObjectMapper();
         var requestPayload = Collections.singletonMap("dna", dna);
-        whenDnaIsEvaluated(dna,
-                () -> mockMvc
-                        .perform(post("/mutant/")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(requestPayload)))
-                        .andDo(print())
-                        .andExpect(status().isForbidden())
-                        .andDo(document("mutant")),
-                true);
+        webTestClient
+                .post()
+                .uri("/mutant/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(objectMapper.writeValueAsString(requestPayload))
+                .exchange()
+                .expectStatus()
+                .isForbidden();
     }
 
     @DisplayName("WHEN a DNA is inquired")
@@ -143,24 +140,16 @@ class MutantControllerTest {
     public void whenInvalidDndIsInquired(List<String> dna) throws Exception {
         var objectMapper = new ObjectMapper();
         var requestPayload = Collections.singletonMap("dna", dna);
-        whenDnaCantBeEvaluated(dna,
-                () -> mockMvc
-                        .perform(post("/mutant/")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(requestPayload)))
-                        .andDo(print())
-                        .andExpect(status().isBadRequest())
-                        .andDo(document("dna-invalid")));
+        webTestClient
+                .post()
+                .uri("/mutant/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(objectMapper.writeValueAsString(requestPayload))
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
 
-    }
-
-    private void whenDnaCantBeEvaluated(
-            List<String> dnaSequence, Callable<?> evaluation) throws Exception {
-        Instant start = Instant.now();
-        evaluation.call();
-        Instant end = Instant.now();
-
-        verifyNoInteractions(evaluationsService);
     }
 
     @TestConfiguration
@@ -173,6 +162,11 @@ class MutantControllerTest {
         @Bean
         ModelMapper modelMapper() {
             return new ModelMapper();
+        }
+
+        @Bean
+        EvaluationFacade evaluationFacade(EvaluationsService evaluationsService) {
+            return new EvaluationFacadeImpl(dnaEvaluator(), evaluationsService, modelMapper());
         }
     }
 

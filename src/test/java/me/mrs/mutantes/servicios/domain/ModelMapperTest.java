@@ -1,8 +1,5 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.domain;
 
-import me.mrs.mutantes.servicios.domain.DnaViewModel;
-import me.mrs.mutantes.servicios.domain.ModelMapper;
-import me.mrs.mutantes.servicios.domain.StatsModel;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -18,7 +15,7 @@ class ModelMapperTest {
         DnaViewModel source = new DnaViewModel(sequence);
         var target = new ModelMapper();
         var start = Instant.now();
-        var dest = target.toBusinessModel(source, true);
+        var dest = target.toBusinessModel(source.getDna(), true);
         assertNotNull(dest);
         assertAll("Comparing field by field",
                 () -> assertEquals(source.getDna(), dest.getDna()),

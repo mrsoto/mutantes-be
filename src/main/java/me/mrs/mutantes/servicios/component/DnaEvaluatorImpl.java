@@ -1,11 +1,7 @@
 package me.mrs.mutantes.servicios.component;
 
-import me.mrs.mutantes.servicios.DnaEvaluator;
 import me.mrs.mutantes.servicios.domain.DnaValidator;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DnaEvaluatorImpl implements DnaEvaluator {
@@ -35,17 +31,6 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
      *
      * @param dna DNA to be tested
      * @return {@code true} when no mutation exists, {@code false} when a mutation is identified
-     */
-    @Override
-    public boolean isMutant(@NonNull List<String> dna) {
-        return isMutant(dna.toArray(new String[0]));
-    }
-
-    /**
-     * Look for a mutation. Prioritized performance over simplicity as required.
-     *
-     * @param dna DNA sequence
-     * @return {@code true} when a mutation is found
      */
     @Override
     public boolean isMutant(String[] dna) {

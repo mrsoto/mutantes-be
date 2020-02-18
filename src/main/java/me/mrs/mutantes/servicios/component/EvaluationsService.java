@@ -1,4 +1,4 @@
-package me.mrs.mutantes.servicios;
+package me.mrs.mutantes.servicios.component;
 
 import me.mrs.mutantes.servicios.domain.EvaluationModel;
 
