@@ -23,7 +23,7 @@ class ModelMapperTest {
         assertAll("Comparing field by field",
                 () -> assertEquals(source.getDna(), dest.getDna()),
                 () -> assertTrue(dest.isMutant()),
-                () -> assertEquals(start, dest.getTimestamp()));
+                () -> assertTrue(start.toEpochMilli() - dest.getTimestamp().toEpochMilli() < 4));
     }
 
     @Test
