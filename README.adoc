@@ -5,7 +5,7 @@
 :toclevels: 4
 :sectlinks:
 
-= Examen Mercadolibre
+= Examen ML
 
 == Instrucciones para compilar y ejecutar
 
@@ -40,3 +40,7 @@ Una vez iniciada la aplicación es posible consumir sus servicios según se indi
 
 Nota: La base de datos para el desafío #3 se crea automáticamente mediante ``liquibase`` según configuración en ``resources/db/changelog``.
 Cualquier cambio a la estructura se realiza agregando change logs en lugar de cambiando los existentes.
+
+== Notas
+* No se incluyen colas con Redis para evitar cargos.
+* Para simplificar el problema y dado el alcance del ejercicio se utiliza cola en memoria.
