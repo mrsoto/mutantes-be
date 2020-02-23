@@ -34,7 +34,7 @@ Una vez iniciada la aplicación es posible consumir sus servicios según se indi
 
 == Ubicación de desafíos
 
-- El desafío #1 se encuentra en la clase ``me.mrs.mutantes.servicios.component.DnaEvaluatorImpl``
+- El desafío #1 se encuentra en la clase ``me.mrs.mutantes.servicios.DnaEvaluatorImpl``
 
 - Desafíos #2 y #3. El URL publicado en Cloud se entrega directamente para evitar ataques.
 
@@ -42,5 +42,6 @@ Nota: La base de datos para el desafío #3 se crea automáticamente mediante ``l
 Cualquier cambio a la estructura se realiza agregando change logs en lugar de cambiando los existentes.
 
 == Notas
+
 * No se incluyen colas con Redis para evitar cargos.
 * Para simplificar el problema y dado el alcance del ejercicio se utiliza cola en memoria.
