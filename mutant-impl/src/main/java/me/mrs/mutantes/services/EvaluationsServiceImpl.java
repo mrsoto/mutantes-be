@@ -3,6 +3,8 @@ package me.mrs.mutantes.services;
 import me.mrs.mutantes.EvaluationModel;
 import me.mrs.mutantes.EvaluationsRepository;
 import me.mrs.mutantes.EvaluationsService;
+import me.mrs.mutantes.annotaion.EvaluationExecutor;
+import me.mrs.mutantes.annotaion.EvaluationQueue;
 import me.mrs.mutantes.annotaion.PersistenceRetryMs;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -25,13 +27,13 @@ public class EvaluationsServiceImpl implements EvaluationsService {
     public EvaluationsServiceImpl(
             @PersistenceRetryMs long durationToRetryMs,
             @NotNull EvaluationsRepository repository,
-            @NotNull Executor executorService,
-            @NotNull BlockingQueue<EvaluationModel> queue) {
+            @EvaluationExecutor @NotNull Executor executor,
+            @EvaluationQueue @NotNull BlockingQueue<EvaluationModel> queue) {
         this.repository = repository;
         this.durationToRetryMs = durationToRetryMs;
         this.queue = queue;
         // FIXME: Don't start thread in constructor
-        executorService.execute(this::flushToRepo);
+        executor.execute(this::flushToRepo);
     }
 
     void flushToRepo() {

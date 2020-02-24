@@ -3,7 +3,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
     <persistence-unit name="mutantes" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- JPA entities must be registered here -->
         <class>me.mrs.mutantes.entity.EvaluationModel</class>
         <class>me.mrs.mutantes.entity.StatsModelEntity</class>
