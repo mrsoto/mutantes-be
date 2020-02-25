@@ -35,11 +35,8 @@
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 
         <asciidoctor-maven-plugin.version>1.5.8</asciidoctor-maven-plugin.version>
-        <caffeine.version>2.8.1</caffeine.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
-        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
-        <spring-restdocs-mockmvc.version>${spring-restdocs-asciidoctor.version}</spring-restdocs-mockmvc.version>
         <reactor-test.version>3.3.2.RELEASE</reactor-test.version>
         <spring-restdocs-asciidoctor.version>2.0.4.RELEASE</spring-restdocs-asciidoctor.version>
         <guice.version>4.2.2</guice.version>
@@ -55,6 +52,12 @@
         <hibernate-validator.version>6.1.2.Final</hibernate-validator.version>
         <jackson-jaxrs-json.version>2.10.2.1</jackson-jaxrs-json.version>
         <junit-jupiter.version>5.6.0</junit-jupiter.version>
+        <HikariCP.version>3.4.2</HikariCP.version>
+        <spring-boot-maven-plugin.version>2.2.4.RELEASE</spring-boot-maven-plugin.version>
+        <jakarta.validation-api.version>3.0.0-M1</jakarta.validation-api.version>
+        <jetbrains.annotations.version>19.0.0</jetbrains.annotations.version>
+        <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+        <log4j.version>1.2.17</log4j.version>
     </properties>
 
     <dependencyManagement>
@@ -89,14 +92,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
@@ -120,7 +115,6 @@
                 <version>${postgresql.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -129,9 +123,15 @@
 
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
+                <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.logz</groupId>
                 <artifactId>guice-jersey</artifactId>
@@ -148,7 +148,7 @@
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>19.0.0</version>
+                <version>${jetbrains.annotations.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
@@ -157,6 +157,21 @@
                 <artifactId>javax.annotation-api</artifactId>
                 <version>${javax.annotation-api.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta.validation-api.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>io.projectreactor</groupId>
@@ -204,12 +219,6 @@
 
     <build>
         <plugins>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -282,8 +291,8 @@
                 </configuration>
             </plugin>
 
+
         </plugins>
     </build>
-
 
 </project>

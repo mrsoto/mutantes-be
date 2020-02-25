@@ -3,12 +3,14 @@ package me.mrs.mutantes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Singleton;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Singleton
 public class DnaValidator implements ConstraintValidator<DnaConstraint, List<String>> {
 
     public static final String VALID_SYMBOLS = "^[ATGC]+$";

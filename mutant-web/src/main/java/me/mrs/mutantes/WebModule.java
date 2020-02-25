@@ -1,25 +1,48 @@
 package me.mrs.mutantes;
 
 import com.google.inject.AbstractModule;
-import me.mrs.mutantes.annotaion.PersistenceRetryMs;
+import com.google.inject.Provides;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
+import javax.sql.DataSource;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class WebModule extends AbstractModule {
-    private static Validator validatorSupplier() {
+    private static final String DEFAULT_H2_DATABASE = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM " +
+            "'classpath:scripts/createh2.sql'";
+
+    @Override
+    protected void configure() {
+        final String databaseUrl = Optional
+                .ofNullable(System.getenv("JDBC_DATABASE_URL"))
+                .orElse(DEFAULT_H2_DATABASE);
+        bind(ModelMapper.class);
+        bind(BlockingQueue.class).toProvider(() -> new ArrayBlockingQueue<>(1000));
+        bindConstant().annotatedWith(DatabaseUrl.class).to(databaseUrl);
+    }
+
+    @Provides
+    Validator validatorSupplier() {
         var validatorFactory = Validation.buildDefaultValidatorFactory();
         return validatorFactory.getValidator();
     }
 
-    @Override
-    protected void configure() {
-        bind(Validator.class).toProvider(WebModule::validatorSupplier);
-        bind(ModelMapper.class).to(ModelMapper.class);
-        bind(BlockingQueue.class).toProvider(() -> new ArrayBlockingQueue<>(1000));
-        bindConstant().annotatedWith(PersistenceRetryMs.class).to(100L);
+    @Provides
+    @Inject
+    DataSource dataSource(@Nullable @DatabaseUrl String dbUrl) {
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            return new HikariDataSource();
+        } else {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(dbUrl);
+            return new HikariDataSource(config);
+        }
     }
-
 }

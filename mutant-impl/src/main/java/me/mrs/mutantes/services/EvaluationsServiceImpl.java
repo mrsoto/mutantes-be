@@ -11,14 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
+@Singleton
 public class EvaluationsServiceImpl implements EvaluationsService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final Executor executor;
     private final BlockingQueue<EvaluationModel> queue;
     private final EvaluationsRepository repository;
     private final long durationToRetryMs;
@@ -31,8 +34,11 @@ public class EvaluationsServiceImpl implements EvaluationsService {
             @EvaluationQueue @NotNull BlockingQueue<EvaluationModel> queue) {
         this.repository = repository;
         this.durationToRetryMs = durationToRetryMs;
+        this.executor = executor;
         this.queue = queue;
-        // FIXME: Don't start thread in constructor
+    }
+
+    public void start() {
         executor.execute(this::flushToRepo);
     }
 
@@ -41,6 +47,7 @@ public class EvaluationsServiceImpl implements EvaluationsService {
             while (isRunning()) {
                 var evaluationModels = getEvaluationModels();
                 if (!evaluationModels.isEmpty() && !tryBatchInsert(evaluationModels)) {
+                    logger.warn("Retrying post to database");
                     submitToRetry(evaluationModels);
                 }
             }
@@ -69,6 +76,9 @@ public class EvaluationsServiceImpl implements EvaluationsService {
 
     private boolean tryBatchInsert(List<EvaluationModel> queries) {
         try {
+            if (queries.size() > 200) {
+                logger.warn("Queue size: {}", queries.size());
+            }
             repository.batchInsert(queries);
             return true;
         } catch (RuntimeException e) {

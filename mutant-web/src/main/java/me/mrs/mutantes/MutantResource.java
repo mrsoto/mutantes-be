@@ -2,8 +2,11 @@ package me.mrs.mutantes;
 
 import org.glassfish.jersey.server.ManagedAsync;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.container.AsyncResponse;
@@ -12,7 +15,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path(MutantResource.PATH)
+@Singleton
 public class MutantResource {
+    private Logger logger = LoggerFactory.getLogger("controller");
+
     @SuppressWarnings("squid:S1075")
     public static final String PATH = "/mutant/";
     private final DnaEvaluator dnaEvaluator;
@@ -35,17 +41,7 @@ public class MutantResource {
     @ManagedAsync
     public void isMutant(
             @Suspended AsyncResponse asyncResponse, @Valid final DnaViewModel payload) {
-//        final Set<ConstraintViolation<DnaViewModel>> validationResult = dnaValidator.validate(
-//                payload,
-//                DnaViewModel.class);
-//        if (!validationResult.isEmpty()) {
-//            var errorMessage = validationResult
-//                    .stream()
-//                    .map(ConstraintViolation::getMessage)
-//                    .collect(Collectors.joining());
-//            asyncResponse.resume(new WebApplicationException(errorMessage,
-//                    Response.Status.BAD_REQUEST));
-//        }
+        logger.trace("mutant requested");
 
         boolean isMutant = dnaEvaluator.isMutant(payload.getDna());
         evaluationsService.registerEvaluation(modelMapper.toBusinessModel(payload, isMutant));

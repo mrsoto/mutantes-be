@@ -3,8 +3,10 @@ package me.mrs.mutantes.services;
 import me.mrs.mutantes.DnaEvaluator;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class DnaEvaluatorImpl implements DnaEvaluator {
 
     public static final int MUTATION_REPETITION_COUNT = 4;

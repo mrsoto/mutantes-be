@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: dna
             columns:
               - column:
-                  name: timestamp
+                  name: instant
                   type: timestamp
                   constraints:
                     nullable: false

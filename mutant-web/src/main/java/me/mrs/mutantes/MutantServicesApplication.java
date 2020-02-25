@@ -6,6 +6,7 @@ import com.google.inject.Guice;
 import io.logz.guice.jersey.JerseyModule;
 import io.logz.guice.jersey.JerseyServer;
 import io.logz.guice.jersey.configuration.JerseyConfiguration;
+import me.mrs.mutantes.services.EvaluationsServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class MutantServicesApplication {
         var modules = getAbstractModules(configuration);
         var injector = Guice.createInjector(modules);
         try {
+            injector.getInstance(EvaluationsServiceImpl.class).start();
             injector.getInstance(JerseyServer.class).start();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -33,9 +35,10 @@ public class MutantServicesApplication {
 
     @NotNull
     public static Iterable<AbstractModule> getAbstractModules(JerseyConfiguration configuration) {
-        var apiModule = new MutantApiModule(MUTANTS_JPA_PERSISTENT_UNIT);
+        var apiModule = new MutantApiModule(1_000L, 1_000, 10_000);
+        var webModule = new WebModule();
         var jerseyModule = new JerseyModule(configuration);
-        return List.of(apiModule, jerseyModule);
+        return List.of(apiModule, webModule, jerseyModule);
     }
 
     public static JerseyConfiguration getJerseyConfiguration(int port) {
@@ -55,13 +58,5 @@ public class MutantServicesApplication {
                 .map(Integer::valueOf)
                 .orElse(DEFAULT_PORT);
     }
-
-//    SpringLiquibase liquibase(DataSource dataSource) {
-//        SpringLiquibase liquibase = new SpringLiquibase();
-//        liquibase.setDataSource(dataSource);
-//        liquibase.isDropFirst();
-//        liquibase.setChangeLog("classpath:/db/changelog/db.changelog-master.yaml");
-//        return liquibase;
-//    }
 
 }

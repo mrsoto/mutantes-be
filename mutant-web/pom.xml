@@ -25,11 +25,16 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -39,6 +44,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -61,7 +67,20 @@
             <groupId>me.alexpanov</groupId>
             <artifactId>free-port-finder</artifactId>
         </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -116,6 +135,30 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>me.mrs.mutantes.MutantServicesApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

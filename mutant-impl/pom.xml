@@ -23,7 +23,6 @@
             <artifactId>mutant-entities</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
@@ -33,18 +32,9 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
