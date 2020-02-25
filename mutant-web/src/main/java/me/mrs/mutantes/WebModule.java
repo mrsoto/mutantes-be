@@ -18,7 +18,7 @@ public class WebModule extends AbstractModule {
     protected void configure() {
         bind(Validator.class).toProvider(WebModule::validatorSupplier);
         bind(ModelMapper.class).to(ModelMapper.class);
-        bind(BlockingQueue.class).toProvider(() -> new ArrayBlockingQueue<>(10));
+        bind(BlockingQueue.class).toProvider(() -> new ArrayBlockingQueue<>(1000));
         bindConstant().annotatedWith(PersistenceRetryMs.class).to(100L);
     }
 

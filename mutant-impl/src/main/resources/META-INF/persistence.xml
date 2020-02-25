@@ -5,13 +5,24 @@
     <persistence-unit name="mutantes" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- JPA entities must be registered here -->
-        <class>me.mrs.mutantes.entity.EvaluationModel</class>
+        <class>me.mrs.mutantes.entity.EvaluationModelEntity</class>
         <class>me.mrs.mutantes.entity.StatsModelEntity</class>
 
         <properties>
             <!-- vendor-specific properties go here -->
             <property name="javax.persistence.lock.timeout" value="500"/>
             <property name="javax.persistence.query.timeout" value="100"/>
+
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:h2:mem:test;INIT=RUNSCRIPT FROM 'classpath:scripts/createh2.sql'"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+            <property name="show_sql" value="true"/>
+            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>

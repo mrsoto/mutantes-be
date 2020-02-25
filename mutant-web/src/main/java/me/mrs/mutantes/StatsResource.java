@@ -2,6 +2,7 @@ package me.mrs.mutantes;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,6 +20,7 @@ public class StatsResource {
     private final StatsService evaluationsService;
     private final ModelMapper modelMapper;
 
+    @Inject
     public StatsResource(
             @NotNull StatsService evaluationsService, @NotNull ModelMapper modelMapper) {
         this.evaluationsService = evaluationsService;

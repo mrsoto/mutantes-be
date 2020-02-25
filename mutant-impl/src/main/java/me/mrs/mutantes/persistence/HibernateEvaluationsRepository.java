@@ -67,12 +67,14 @@ public class HibernateEvaluationsRepository implements EvaluationsRepository {
                 mutants++;
             }
             count++;
-            if (count >= batchSize) {
-                entityManager.flush();
-                entityManager.clear();
-                count = 0;
-            }
+//            if (count >= batchSize) {
+//                entityManager.flush();
+//                entityManager.clear();
+//                logger.debug("Batch insert:{}", count);
+//                count = 0;
+//            }
         }
+        logger.info("Batch insert:{}", count);
 
         return mutants;
     }

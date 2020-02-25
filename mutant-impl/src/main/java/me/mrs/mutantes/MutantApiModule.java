@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 public class MutantApiModule extends AbstractModule {
     private final String mutantsJpaPersistentUnit;
     private final Duration statsCacheLifeSpan;
-    private final int persistenceCacheCapacity;
     private final Long persistenceRetryMs;
     private final int insertBatchSize;
     private final int queueCapacity;
@@ -31,11 +30,10 @@ public class MutantApiModule extends AbstractModule {
             String mutantsJpaPersistentUnit) {
         this.mutantsJpaPersistentUnit = mutantsJpaPersistentUnit;
 
-        this.statsCacheLifeSpan = Duration.ofSeconds(1);
-        persistenceCacheCapacity = 10;
-        persistenceRetryMs = 1000L;
-        insertBatchSize = 1000;
-        queueCapacity = 10;
+        this.statsCacheLifeSpan = Duration.ofSeconds(5);
+        persistenceRetryMs = 1_000L;
+        insertBatchSize = 1_000;
+        queueCapacity = 10_000;
     }
 
     private static Supplier<Instant> nowInstanceProvider() {
@@ -55,8 +53,7 @@ public class MutantApiModule extends AbstractModule {
         bind(EvaluationsRepository.class)
                 .to(HibernateEvaluationsRepository.class)
                 .in(Singleton.class);
-        bind(new TypeLiteral<BlockingQueue<EvaluationModel>>() {
-        })
+        bind(createTypeLiteralEvaluationQueue())
                 .annotatedWith(EvaluationQueue.class)
                 .toProvider(() -> new ArrayBlockingQueue<>(queueCapacity));
 
@@ -71,10 +68,14 @@ public class MutantApiModule extends AbstractModule {
                 .toProvider(Executors::newCachedThreadPool);
 
         bindConstant().annotatedWith(EvaluationPersistentUnit.class).to(mutantsJpaPersistentUnit);
-        bindConstant().annotatedWith(PersistenceQueueCapacity.class).to(persistenceCacheCapacity);
         bindConstant().annotatedWith(PersistenceRetryMs.class).to(persistenceRetryMs);
         bindConstant().annotatedWith(InsertBatchSize.class).to(insertBatchSize);
         bindConstant().annotatedWith(StatsCacheLifeSpan.class).to(statsCacheLifeSpan.toMillis());
+    }
+
+    public TypeLiteral<BlockingQueue<EvaluationModel>> createTypeLiteralEvaluationQueue() {
+        return new TypeLiteral<>() {
+        };
     }
 
     private EntityManagerFactory entityManagerFactoryProvider() {
