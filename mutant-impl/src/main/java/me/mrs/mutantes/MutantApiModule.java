@@ -1,7 +1,6 @@
 package me.mrs.mutantes;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import me.mrs.mutantes.annotaion.*;
 import me.mrs.mutantes.converter.AttributeConverter;
@@ -44,18 +43,16 @@ public class MutantApiModule extends AbstractModule {
         };
     }
 
-
     @Override
     public void configure() {
-        bind(JdbcTemplate.class).in(Singleton.class);
-        bind(DnaEvaluator.class).to(DnaEvaluatorImpl.class).in(Singleton.class);
-        bind(EvaluationsService.class).to(EvaluationsServiceImpl.class).in(Singleton.class);
-        bind(StatsService.class).to(StatsServiceImpl.class).in(Singleton.class);
+        bind(JdbcTemplate.class);
+        bind(DnaEvaluator.class).to(DnaEvaluatorImpl.class);
+        bind(EvaluationsService.class).to(EvaluationsServiceImpl.class);
+        bind(StatsService.class).to(StatsServiceImpl.class);
         bind(getTypeLiteralDnaConverter())
                 .annotatedWith(DnaConverter.class)
-                .to(BaseDnaConverter.class)
-                .in(Singleton.class);
-        bind(EvaluationsRepository.class).to(JdbcEvaluationsRepository.class).in(Singleton.class);
+                .to(BaseDnaConverter.class);
+        bind(EvaluationsRepository.class).to(JdbcEvaluationsRepository.class);
         bind(createTypeLiteralEvaluationQueue())
                 .annotatedWith(EvaluationQueue.class)
                 .toProvider(() -> new ArrayBlockingQueue<>(queueCapacity));
@@ -64,8 +61,7 @@ public class MutantApiModule extends AbstractModule {
                 .annotatedWith(Now.class)
                 .toProvider(MutantApiModule::nowInstanceProvider);
 
-        bind(Executor.class)
-                .annotatedWith(EvaluationExecutor.class)
+        bind(Executor.class).annotatedWith(EvaluationExecutor.class)
                 .toProvider(Executors::newSingleThreadExecutor);
 
         bindConstant().annotatedWith(PersistenceRetryMs.class).to(persistenceRetryMs);
@@ -82,5 +78,4 @@ public class MutantApiModule extends AbstractModule {
         return new TypeLiteral<>() {
         };
     }
-
 }

@@ -3,6 +3,7 @@ package me.mrs.mutantes;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.Stage;
 import io.logz.guice.jersey.JerseyModule;
 import io.logz.guice.jersey.JerseyServer;
 import io.logz.guice.jersey.configuration.JerseyConfiguration;
@@ -23,7 +24,7 @@ public class MutantServicesApplication {
         int port = getPort();
         JerseyConfiguration configuration = getJerseyConfiguration(port);
         var modules = getAbstractModules(configuration);
-        var injector = Guice.createInjector(modules);
+        var injector = Guice.createInjector(Stage.PRODUCTION, modules);
         try {
             injector.getInstance(EvaluationsServiceImpl.class).start();
             injector.getInstance(JerseyServer.class).start();
