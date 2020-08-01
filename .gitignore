@@ -14,9 +14,14 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
 *.iws
 *.iml
 *.ipr
-
+.idea
+!.idea/codeStyles
+!.idea/inspectionProfiles
+!.idea/sonarlint.xml
+!.idea/compiler.xml
+!.idea/encodings.xml
+!.idea/misc.xml
 /Procfile
