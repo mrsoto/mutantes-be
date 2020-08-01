@@ -36,7 +36,7 @@ public class DnaPrepareInsertStatementSetter implements ParameterizedPreparedSta
 
     }
 
-    private String serialize(List<String> dna) {
+    private static String serialize(List<String> dna) {
         return String.join(",", dna);
     }
 

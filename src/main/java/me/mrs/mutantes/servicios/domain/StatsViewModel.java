@@ -25,6 +25,9 @@ public final class StatsViewModel {
 
     @JsonProperty("ratio")
     public Double getRatio() {
-        return humans != 0 ? (double) mutants / (double) humans : null;
+        if (humans == 0) {
+            return null;
+        }
+        return (double) mutants / (double) humans;
     }
 }
