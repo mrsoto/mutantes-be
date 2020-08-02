@@ -1,9 +1,9 @@
 package me.mrs.mutantes;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @Path(StatsResource.PATH)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,18 +27,24 @@ public class StatsResource {
     public static final String PATH = "/stats";
     private final StatsService evaluationsService;
     private final ModelMapper modelMapper;
+    private final Executor executor;
 
     @Inject
     public StatsResource(
-            @NotNull StatsService evaluationsService, @NotNull ModelMapper modelMapper) {
+            @Nonnull StatsService evaluationsService,
+            @Nonnull ModelMapper modelMapper,
+            @ServiceExecutor @Nonnull Executor executor
+    ) {
         this.evaluationsService = evaluationsService;
         this.modelMapper = modelMapper;
+        this.executor = executor;
     }
 
     @GET
     public void getStats(@Suspended AsyncResponse asyncResponse) {
-        StatsViewModel body = modelMapper.toViewModel(evaluationsService.getStats());
-        logger.trace("Stats requested");
-        asyncResponse.resume(body);
+        CompletableFuture.supplyAsync(() -> {
+            logger.trace("Stats requested");
+            return modelMapper.toViewModel(evaluationsService.getStats());
+        }, executor).thenApply(asyncResponse::resume);
     }
 }

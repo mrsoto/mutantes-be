@@ -1,9 +1,10 @@
 package me.mrs.mutantes.converter;
-
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public interface AttributeConverter<T, U> {
-    @NotNull U convertToDatabaseColumn(@NotNull T bases);
+    @Nonnull
+    U convertToDatabaseColumn(@Nonnull T bases);
 
-    @NotNull T convertToEntityAttribute(@NotNull U s);
+    @Nonnull
+    T convertToEntityAttribute(@Nonnull U s);
 }

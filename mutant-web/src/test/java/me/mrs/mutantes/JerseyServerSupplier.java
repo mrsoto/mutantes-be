@@ -17,15 +17,14 @@ import javax.ws.rs.client.WebTarget;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: Create a Guice agnostic JerseySupplier
 public class JerseyServerSupplier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JerseyServerSupplier.class);
 
     public static void createServerAndTest(
             ResourceConfig resourceConfig, Tester tester) throws Exception {
-        JerseyConfigurationBuilder configurationBuilder = JerseyConfiguration
-                .builder()
-                .withResourceConfig(resourceConfig);
+        JerseyConfigurationBuilder configurationBuilder = JerseyConfiguration.builder().withResourceConfig(resourceConfig);
 
         createServerAndTest(configurationBuilder, tester);
     }
@@ -42,9 +41,7 @@ public class JerseyServerSupplier {
             LOGGER.info("Started server on port: {}", port);
 
             Client client = ClientBuilder.newClient();
-            WebTarget target = client
-                    .target("http://localhost:" + port)
-                    .path(configuration.getContextPath());
+            WebTarget target = client.target("http://localhost:" + port).path(configuration.getContextPath());
             tester.test(target);
         } finally {
             server.stop();

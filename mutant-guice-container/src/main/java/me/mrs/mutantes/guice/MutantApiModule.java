@@ -1,7 +1,8 @@
-package me.mrs.mutantes;
+package me.mrs.mutantes.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import me.mrs.mutantes.*;
 import me.mrs.mutantes.annotaion.*;
 import me.mrs.mutantes.converter.AttributeConverter;
 import me.mrs.mutantes.converter.BaseDnaConverter;
@@ -27,7 +28,8 @@ public class MutantApiModule extends AbstractModule {
     private final int queueCapacity;
 
     public MutantApiModule(
-            long persistenceRetryMs, int insertBatchSize, int queueCapacity) {
+            long persistenceRetryMs, int insertBatchSize, int queueCapacity
+    ) {
         this.statsCacheLifeSpan = Duration.ofSeconds(5);
         this.persistenceRetryMs = persistenceRetryMs;
         this.insertBatchSize = insertBatchSize;
@@ -39,8 +41,7 @@ public class MutantApiModule extends AbstractModule {
     }
 
     private static TypeLiteral<Supplier<Instant>> createInstantSupplierTypeLiteral() {
-        return new TypeLiteral<>() {
-        };
+        return new TypeLiteral<>() {};
     }
 
     @Override
@@ -61,7 +62,8 @@ public class MutantApiModule extends AbstractModule {
                 .annotatedWith(Now.class)
                 .toProvider(MutantApiModule::nowInstanceProvider);
 
-        bind(Executor.class).annotatedWith(EvaluationExecutor.class)
+        bind(Executor.class)
+                .annotatedWith(EvaluationExecutor.class)
                 .toProvider(Executors::newSingleThreadExecutor);
 
         bindConstant().annotatedWith(PersistenceRetryMs.class).to(persistenceRetryMs);
@@ -70,12 +72,10 @@ public class MutantApiModule extends AbstractModule {
     }
 
     public TypeLiteral<AttributeConverter<List<String>, String>> getTypeLiteralDnaConverter() {
-        return new TypeLiteral<>() {
-        };
+        return new TypeLiteral<>() {};
     }
 
     public TypeLiteral<BlockingQueue<EvaluationModel>> createTypeLiteralEvaluationQueue() {
-        return new TypeLiteral<>() {
-        };
+        return new TypeLiteral<>() {};
     }
 }

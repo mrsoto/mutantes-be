@@ -6,12 +6,30 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mutantes-servicios" />
+        <module name="guice-container" />
+      </profile>
+      <profile name="Annotation profile for mutantes-servicios" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="mutant-web" />
+        <module name="mutant-entities" />
+        <module name="mutant-bootstrap" />
+        <module name="mutant-api" />
+        <module name="mutant-impl" />
+        <module name="mutant-guice-container" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="guice-container" target="11" />
       <module name="mutant-api" target="11" />
+      <module name="mutant-bootstrap" target="11" />
+      <module name="mutant-core" target="11" />
       <module name="mutant-entities" target="11" />
+      <module name="mutant-guice-container" target="11" />
       <module name="mutant-impl" target="11" />
       <module name="mutant-web" target="11" />
       <module name="mutantes-servicios" target="11" />
@@ -22,7 +40,7 @@
       <module name="mutant-api" options="" />
       <module name="mutant-impl" options="" />
       <module name="mutant-web" options="" />
-      <module name="mutantes-servicios" options="-parameters" />
+      <module name="mutantes-servicios" options="" />
     </option>
   </component>
 </project>

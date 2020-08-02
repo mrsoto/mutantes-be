@@ -6,10 +6,10 @@ import me.mrs.mutantes.EvaluationsService;
 import me.mrs.mutantes.annotaion.EvaluationExecutor;
 import me.mrs.mutantes.annotaion.EvaluationQueue;
 import me.mrs.mutantes.annotaion.PersistenceRetryMs;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 @Singleton
-public class EvaluationsServiceImpl implements EvaluationsService {
+public class EvaluationsServiceImpl implements EvaluationsService, Startable {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Executor executor;
@@ -29,9 +29,10 @@ public class EvaluationsServiceImpl implements EvaluationsService {
     @Inject
     public EvaluationsServiceImpl(
             @PersistenceRetryMs long durationToRetryMs,
-            @NotNull EvaluationsRepository repository,
-            @EvaluationExecutor @NotNull Executor executor,
-            @EvaluationQueue @NotNull BlockingQueue<EvaluationModel> queue) {
+            @Nonnull EvaluationsRepository repository,
+            @EvaluationExecutor @Nonnull Executor executor,
+            @EvaluationQueue @Nonnull BlockingQueue<EvaluationModel> queue
+    ) {
         this.repository = repository;
         this.durationToRetryMs = durationToRetryMs;
         this.executor = executor;
@@ -76,7 +77,7 @@ public class EvaluationsServiceImpl implements EvaluationsService {
 
     private boolean tryBatchInsert(List<EvaluationModel> queries) {
         try {
-            if (queries.size() > 200) {
+            if (queries.size() > 100) {
                 logger.warn("Queue size: {}", queries.size());
             }
             repository.batchInsert(queries);
@@ -88,7 +89,7 @@ public class EvaluationsServiceImpl implements EvaluationsService {
     }
 
     @Override
-    public void registerEvaluation(@NotNull EvaluationModel evaluation) {
+    public void registerEvaluation(@Nonnull EvaluationModel evaluation) {
         queue.add(evaluation);
     }
 }

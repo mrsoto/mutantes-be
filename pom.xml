@@ -26,6 +26,8 @@
         <module>mutant-impl</module>
         <module>mutant-web</module>
         <module>mutant-entities</module>
+        <module>mutant-guice-container</module>
+        <module>mutant-bootstrap</module>
     </modules>
 
     <properties>
@@ -58,10 +60,27 @@
         <jetbrains.annotations.version>19.0.0</jetbrains.annotations.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <log4j.version>1.2.17</log4j.version>
+        <javax.inject.version>1</javax.inject.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <jakarta.ws.rs-api.version>2.1.6</jakarta.ws.rs-api.version>
+        <free-port-finder.version>1.1.1</free-port-finder.version>
+        <jsr305.version>3.0.2</jsr305.version>
+        <lombok.version>1.18.12</lombok.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>me.mrs</groupId>
+                <artifactId>mutant-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>me.mrs</groupId>
+                <artifactId>mutant-guice-container</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>me.mrs</groupId>
                 <artifactId>mutant-api</artifactId>
@@ -145,12 +164,6 @@
                 <scope>compile</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.jetbrains</groupId>
-                <artifactId>annotations</artifactId>
-                <version>${jetbrains.annotations.version}</version>
-            </dependency>
-
             <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
             <dependency>
                 <groupId>javax.annotation</groupId>
@@ -209,8 +222,44 @@
             <dependency>
                 <groupId>me.alexpanov</groupId>
                 <artifactId>free-port-finder</artifactId>
-                <version>1.1.1</version>
+                <version>${free-port-finder.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${javax.inject.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation-api.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
+                <version>${jakarta.ws.rs-api.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey-server.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
 
         </dependencies>
@@ -227,6 +276,13 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
 

@@ -7,42 +7,31 @@
         <artifactId>mutantes-servicios</artifactId>
         <groupId>me.mrs</groupId>
         <version>1.0.5-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>mutant-impl</artifactId>
-    <packaging>jar</packaging>
 
-
+    <artifactId>mutant-guice-container</artifactId>
     <dependencies>
         <dependency>
             <groupId>me.mrs</groupId>
-            <artifactId>mutant-api</artifactId>
+            <artifactId>mutant-impl</artifactId>
         </dependency>
         <dependency>
             <groupId>me.mrs</groupId>
-            <artifactId>mutant-entities</artifactId>
+            <artifactId>mutant-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.logz</groupId>
+            <artifactId>guice-jersey</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
         </dependency>
 
     </dependencies>

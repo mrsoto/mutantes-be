@@ -5,8 +5,8 @@ import me.mrs.mutantes.StatsModel;
 import me.mrs.mutantes.StatsService;
 import me.mrs.mutantes.annotaion.Now;
 import me.mrs.mutantes.annotaion.StatsCacheLifeSpan;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Duration;

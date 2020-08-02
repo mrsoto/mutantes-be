@@ -1,8 +1,8 @@
 package me.mrs.mutantes.services;
 
 import me.mrs.mutantes.DnaEvaluator;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class DnaEvaluatorImpl implements DnaEvaluator {
      * @return {@code true} when no mutation exists, {@code false} when a mutation is identified
      */
     @Override
-    public boolean isMutant(@NotNull List<String> dna) {
+    public boolean isMutant(@Nonnull List<String> dna) {
         return isMutant(dna.toArray(new String[0]));
     }
 

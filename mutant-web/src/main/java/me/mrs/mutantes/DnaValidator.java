@@ -1,8 +1,7 @@
 package me.mrs.mutantes;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -22,7 +21,8 @@ public class DnaValidator implements ConstraintValidator<DnaConstraint, List<Str
     @Override
     public boolean isValid(
             @Nullable List<String> dna,
-            @NotNull ConstraintValidatorContext constraintValidatorContext) {
+            @Nonnull ConstraintValidatorContext constraintValidatorContext
+    ) {
         if (dna == null || dna.isEmpty() || dna.stream().anyMatch(Objects::isNull)) {
             return false;
         }

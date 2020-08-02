@@ -1,7 +1,8 @@
 package me.mrs.mutantes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.Nullable;
+
+import javax.validation.constraints.Null;
 
 public final class StatsViewModel {
 
@@ -25,10 +26,9 @@ public final class StatsViewModel {
     }
 
     @JsonProperty("ratio")
-    public @Nullable
-    Double getRatio() {
+    public Double getRatio() {
         if (humans == 0) {
-            return null;
+            return Double.POSITIVE_INFINITY;
         }
         return (double) mutants / (double) humans;
     }

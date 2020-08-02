@@ -1,17 +1,17 @@
 package me.mrs.mutantes;
 
 import com.google.common.collect.ImmutableList;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
 public class DnaViewModel {
-    @NotNull
+    @Nonnull
     @DnaConstraint
     private final List<String> dna;
 
-    public DnaViewModel(@NotNull List<String> dna) {
+    public DnaViewModel(@Nonnull List<String> dna) {
         this.dna = ImmutableList.copyOf(dna);
     }
 
@@ -19,7 +19,7 @@ public class DnaViewModel {
         this(Collections.emptyList());
     }
 
-    @NotNull
+    @Nonnull
     public List<String> getDna() {
         return ImmutableList.copyOf(dna);
     }

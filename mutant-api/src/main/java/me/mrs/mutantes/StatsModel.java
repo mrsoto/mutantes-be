@@ -1,11 +1,12 @@
 package me.mrs.mutantes;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface StatsModel {
     long getMutants();
 
     long getHumans();
 
-    @Nullable Double getRatio();
+    @Nullable
+    Double getRatio();
 }

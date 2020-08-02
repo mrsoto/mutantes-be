@@ -7,10 +7,10 @@ import me.mrs.mutantes.annotaion.DnaConverter;
 import me.mrs.mutantes.annotaion.InsertBatchSize;
 import me.mrs.mutantes.converter.AttributeConverter;
 import me.mrs.mutantes.entity.StatsModelEntity;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collection;
@@ -28,9 +28,10 @@ public class JdbcEvaluationsRepository implements EvaluationsRepository {
 
     @Inject
     public JdbcEvaluationsRepository(
-            @NotNull JdbcTemplate jdbcTemplate,
+            @Nonnull JdbcTemplate jdbcTemplate,
             @InsertBatchSize int batchSize,
-            @DnaConverter @NotNull AttributeConverter<List<String>, String> dnaConverter) {
+            @DnaConverter @Nonnull AttributeConverter<List<String>, String> dnaConverter
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         this.batchSize = batchSize;
         this.parametrizedInsertSetter = new EvaluationInsertStatement(dnaConverter);

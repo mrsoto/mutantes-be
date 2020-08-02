@@ -1,7 +1,6 @@
 package me.mrs.mutantes.persistence;
 
-import org.jetbrains.annotations.NotNull;
-
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
@@ -14,11 +13,11 @@ import static java.sql.Statement.EXECUTE_FAILED;
 
 @Singleton
 public class JdbcTemplate {
-    @NotNull
+    @Nonnull
     private final DataSource dataSource;
 
     @Inject
-    public JdbcTemplate(@NotNull DataSource dataSource) {
+    public JdbcTemplate(@Nonnull DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -26,6 +25,7 @@ public class JdbcTemplate {
         try (var connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             task.accept(connection);
+//            Thread.sleep(3,0);
             connection.commit();
         } catch (RuntimeException rte) {
             throw rte;
@@ -74,23 +74,26 @@ public class JdbcTemplate {
     }
 
     public <T> void update(
-            @NotNull Connection connection,
-            @NotNull String sentence,
-            @NotNull T model,
-            ParameterizedPreparedStatementSetter<T> parametrizedSetter) throws SQLException {
+            @Nonnull Connection connection,
+            @Nonnull String sentence,
+            @Nonnull T model,
+            ParameterizedPreparedStatementSetter<T> parametrizedSetter
+    ) throws SQLException {
         try (var statement = connection.prepareStatement(sentence)) {
             parametrizedSetter.accept(statement, model);
             var fail = statement.execute();
             if (fail) {
                 throw new SqlUpdateFailureException(String.format("Unable to execute sentence: %s",
-                        sentence));
+                        sentence
+                ));
             }
         }
     }
 
-    @NotNull
+    @Nonnull
     public <T> Optional<T> queryForObject(
-            @NotNull String sentence, @NotNull ResultRowMapper<T> resultRowMapper) {
+            @Nonnull String sentence, @Nonnull ResultRowMapper<T> resultRowMapper
+    ) {
         try (var connection = dataSource.getConnection()) {
             return queryForObject(connection, sentence, resultRowMapper);
         } catch (SQLException e) {
@@ -98,11 +101,12 @@ public class JdbcTemplate {
         }
     }
 
-    @NotNull
+    @Nonnull
     public <T> Optional<T> queryForObject(
-            @NotNull Connection connection,
-            @NotNull String sentence,
-            @NotNull ResultRowMapper<T> resultRowMapper) {
+            @Nonnull Connection connection,
+            @Nonnull String sentence,
+            @Nonnull ResultRowMapper<T> resultRowMapper
+    ) {
         try (var statement = connection.prepareStatement(sentence)) {
             try (var resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -122,17 +126,17 @@ public class JdbcTemplate {
     @FunctionalInterface
     public interface ThrowableConsumer<T> {
         @SuppressWarnings("squid:S00112")
-        void accept(@NotNull T value) throws Throwable;
+        void accept(@Nonnull T value) throws Throwable;
     }
 
     public static class RollBackException extends RuntimeException {
-        public RollBackException(@NotNull Throwable e) {
+        public RollBackException(@Nonnull Throwable e) {
             super(e);
         }
     }
 
     private static class SqlUpdateFailureException extends RuntimeException {
-        public SqlUpdateFailureException(@NotNull String cause) {
+        public SqlUpdateFailureException(@Nonnull String cause) {
             super(cause);
         }
     }

@@ -1,8 +1,8 @@
 package me.mrs.mutantes.entity;
 
 import me.mrs.mutantes.EvaluationModel;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -13,14 +13,15 @@ public class EvaluationModelEntity implements EvaluationModel {
     private Instant timestamp;
 
     public EvaluationModelEntity(
-            @NotNull List<String> dna, boolean mutant, @NotNull Instant timestamp) {
+            @Nonnull List<String> dna, boolean mutant, @Nonnull Instant timestamp
+    ) {
         this.dna = dna;
         this.mutant = mutant;
         this.timestamp = timestamp;
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public List<String> getDna() {
         return Objects.requireNonNull(dna);
     }
@@ -31,7 +32,7 @@ public class EvaluationModelEntity implements EvaluationModel {
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public Instant getTimestamp() {
         return Objects.requireNonNull(timestamp);
     }

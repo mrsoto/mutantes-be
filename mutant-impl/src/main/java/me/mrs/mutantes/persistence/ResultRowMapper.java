@@ -1,11 +1,11 @@
 package me.mrs.mutantes.persistence;
 
-import org.jetbrains.annotations.NotNull;
-
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 
 @FunctionalInterface
 public interface ResultRowMapper<T> {
     @SuppressWarnings("squid:S00112")
-    @NotNull T mapRow(@NotNull ResultSet resultSet) throws Exception;
+    @Nonnull
+    T mapRow(@Nonnull ResultSet resultSet) throws Exception;
 }
