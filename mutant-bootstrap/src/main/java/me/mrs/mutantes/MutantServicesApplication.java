@@ -21,7 +21,7 @@ public class MutantServicesApplication {
 
     public static void main(String[] args) {
         int port = getServerPort();
-        var containerBuilder = ContainerBuilderFactory.of(MutantServicesApplication.class);
+        var containerBuilder = ContainerFactory.of(MutantServicesApplication.class);
         var jerseyConfiguration = createJerseyConfiguration(port);
         var application = containerBuilder.create(jerseyConfiguration);
         try {
