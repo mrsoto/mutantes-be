@@ -62,8 +62,7 @@ public class MutantApiModule extends AbstractModule {
                 .annotatedWith(Now.class)
                 .toProvider(MutantApiModule::nowInstanceProvider);
 
-        bind(Executor.class)
-                .annotatedWith(EvaluationExecutor.class)
+        bind(Executor.class).annotatedWith(FlushExecutor.class)
                 .toProvider(Executors::newSingleThreadExecutor);
 
         bindConstant().annotatedWith(PersistenceRetryMs.class).to(persistenceRetryMs);

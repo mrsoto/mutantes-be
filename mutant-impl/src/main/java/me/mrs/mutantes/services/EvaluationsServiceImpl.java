@@ -3,8 +3,8 @@ package me.mrs.mutantes.services;
 import me.mrs.mutantes.EvaluationModel;
 import me.mrs.mutantes.EvaluationsRepository;
 import me.mrs.mutantes.EvaluationsService;
-import me.mrs.mutantes.annotaion.EvaluationExecutor;
 import me.mrs.mutantes.annotaion.EvaluationQueue;
+import me.mrs.mutantes.annotaion.FlushExecutor;
 import me.mrs.mutantes.annotaion.PersistenceRetryMs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class EvaluationsServiceImpl implements EvaluationsService, Startable {
     public EvaluationsServiceImpl(
             @PersistenceRetryMs long durationToRetryMs,
             @Nonnull EvaluationsRepository repository,
-            @EvaluationExecutor @Nonnull Executor executor,
+            @FlushExecutor @Nonnull Executor executor,
             @EvaluationQueue @Nonnull BlockingQueue<EvaluationModel> queue
     ) {
         this.repository = repository;

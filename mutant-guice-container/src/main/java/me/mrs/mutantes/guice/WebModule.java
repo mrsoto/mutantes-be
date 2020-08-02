@@ -39,6 +39,7 @@ public class WebModule extends AbstractModule {
     @Provides
     Validator validatorSupplier() {
         var validatorFactory = Validation.buildDefaultValidatorFactory();
+        // TODO: Close validator
         return validatorFactory.getValidator();
     }
 

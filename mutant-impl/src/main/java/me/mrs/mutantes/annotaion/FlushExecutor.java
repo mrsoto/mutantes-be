@@ -10,5 +10,4 @@ import java.lang.annotation.Target;
 @BindingAnnotation
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.FIELD})
-public @interface EvaluationExecutor {
-}
+public @interface FlushExecutor {}

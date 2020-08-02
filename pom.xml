@@ -57,6 +57,8 @@
         <HikariCP.version>3.4.2</HikariCP.version>
         <spring-boot-maven-plugin.version>2.2.4.RELEASE</spring-boot-maven-plugin.version>
         <jakarta.validation-api.version>3.0.0-M1</jakarta.validation-api.version>
+        <javax.el-api.version>3.0.0</javax.el-api.version>
+        <javax.el.version>2.2.6</javax.el.version>
         <jetbrains.annotations.version>19.0.0</jetbrains.annotations.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <log4j.version>1.2.17</log4j.version>
