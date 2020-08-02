@@ -13,13 +13,16 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/mutant-api/pom.xml" />
         <option value="$PROJECT_DIR$/mutant-core/pom.xml" />
+        <option value="$PROJECT_DIR$/mutant-entities/pom.xml" />
+        <option value="$PROJECT_DIR$/mutant-impl/pom.xml" />
       </set>
     </option>
   </component>
   <component name="NullableNotNullManager">
-    <option name="myDefaultNullable" value="org.springframework.lang.Nullable" />
-    <option name="myDefaultNotNull" value="org.jetbrains.annotations.NotNull" />
+    <option name="myDefaultNullable" value="javax.annotation.Nullable" />
+    <option name="myDefaultNotNull" value="javax.annotation.Nonnull" />
     <option name="myNullables">
       <value>
         <list size="11">
@@ -53,6 +56,9 @@
         </list>
       </value>
     </option>
+    <instrumentedNotNulls>
+      <option value="javax.annotation.Nonnull" />
+    </instrumentedNotNulls>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

@@ -4,10 +4,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.mrs</groupId>
-    <artifactId>mutantes-servicios</artifactId>
+    <artifactId>mutantes</artifactId>
     <version>1.0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>mutantes-servicios</name>
+    <name>mutantes</name>
     <description>Servicios de backend para identificación de mutantes</description>
 
     <licenses>
@@ -22,10 +22,7 @@
     </licenses>
 
     <modules>
-        <module>mutant-api</module>
-        <module>mutant-impl</module>
         <module>mutant-web</module>
-        <module>mutant-entities</module>
         <module>mutant-guice-container</module>
         <module>mutant-bootstrap</module>
     </modules>
@@ -118,11 +115,6 @@
                 <version>${hibernate-validator.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>${liquibase-core.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
